@@ -13,7 +13,7 @@ I followed this [guide](https://learn.adafruit.com/led-matrix-sports-scoreboard/
 I had trouble collecting the NCAA teams though because the ESPN API limited its response to 50 teams. I tried (not too hard) to add pagination to my request call but was unsuccessful so I wrote a small PowerShell [script](./ncaa.ps1) to collect team names and their IDs. I added them to a JSON [blob](./ncaa.json) to loop through to collect their logos with this [script](./ncaa_logos.py).
 
 ### Pregame
-Currently shows the team logos and the game time. ![pregame](imgs/pregame.jpg)
+Currently shows the team logos and the game time. ![pregame](imgs/pre_game.jpg)
 
 ### Live scoring updates 
 The score updates every 3 seconds.
@@ -22,10 +22,10 @@ The score updates every 3 seconds.
 - NFL and NCAA Football should do what MikeMountain's scoreboard does, but being that we're not in season I haven't been able to validate it yet.  Coming this fall!
 
 ### Postgame
-Just kind of looks like the pre-game screen but with the final scores. ![final score](imgs/postgame.jpg)
+Just kind of looks like the pre-game screen but with the final scores. ![final score](imgs/post_game.jpg)
 
 ### Postponed
-Mostly for MLB, but I added a PPD display with a rain cloud for when games are postponed.
+Mostly for MLB, but I added a PPD display with a rain cloud for when games are postponed. ![postponed](imgs/postponed.jpg)
 
 ## Roadmap
 

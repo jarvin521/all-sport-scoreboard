@@ -18,6 +18,7 @@ def get_all_games():
             for g in res['events']:
                 info = g['competitions'][0]
                 odds = info.get('odds', [{}])[0]
+                playoffs = info.get('series', "").get("type", "")
                 if "nfl" in URL: 
                     if "Cincinnati Bengals" in g['name'] or "Minnesota Vikings" in g['name']:                       
                         game = {'name': g['shortName'], 'date': g['date'], 'league': 'nfl',

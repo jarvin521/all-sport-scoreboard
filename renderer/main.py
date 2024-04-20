@@ -23,7 +23,7 @@ class MainRenderer:
         # Load the fonts
         self.font = ImageFont.truetype("fonts/score_large.otf", 16)
         self.font_mini = ImageFont.truetype("fonts/04B_03B_.TTF", 8)
-        self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 4)
+        self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
 
     def render(self):
         while True:
@@ -130,8 +130,8 @@ class MainRenderer:
             self.draw.multiline_text((gametime_pos, 6), gametime, fill=(255, 255, 255), font=self.font_mini, align="center")
             self.draw.text((25, 15), 'VS', font=self.font)
             
-            self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_mini, fill=(0, 255, 0))
-            self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_mini, fill=(0, 255, 0))
+            self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_mcro, fill=(0, 255, 0))
+            self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_micro, fill=(0, 255, 0))
     
             # Put the data on the canvas
             self.canvas.SetImage(self.image, 0, 0)

@@ -93,6 +93,21 @@ def get_all_games():
                             game['overUnder'] = None
                             game['spread'] = None
                         games.append(game)
+                if "college-baseball" in URL:
+                    if "Kentucky Wildcats" in g['name'] or " " in g['name']:
+                        game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa-baseball',
+                            'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
+                            'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
+                            'quarter': info['status']['period'], '1b' :info.get("situation", {}).get("onFirst"), '2b': info.get("situation", {}).get("onSecond"), '3b': info.get("situation", {}).get("onThird"),
+                            'balls': info.get('situation', {}).get('balls'), 'strikes': info.get('situation', {}).get('strikes'), 'outs': info.get('situation', {}).get('outs'),
+                            'over': info['status']['type']['completed'],'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
+                        if odds: 
+                            game['overUnder'] = odds.get('overUnder')
+                            game['spread'] = odds.get('spread')
+                        else:
+                            game['overUnder'] = None
+                            game['spread'] = None
+                        games.append(game)
                 if "nhl" in URL:
                     if "asdf" in g['name']:
                         game = {'name': g['shortName'], 'date': g['date'], 'league': 'nhl', 

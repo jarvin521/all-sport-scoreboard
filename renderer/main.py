@@ -104,8 +104,8 @@ class MainRenderer:
                 self._draw_post_game(game)
         else:
             debug.info('Live State, checking every 5s')
-            if game['league'] == 'mlb':
-                self._draw_live_mlb(game)
+            if game['league'] == 'mlb' or game['league'] == 'ncaa-baseball':
+                self._draw_live_baseball(game)
             else:
                 self._draw_live_game(game)
         #debug.info('ping render_game')
@@ -150,7 +150,7 @@ class MainRenderer:
             self.image = Image.new('RGB', (self.width, self.height))
             self.draw = ImageDraw.Draw(self.image)
     
-    def _draw_live_mlb(self, game):
+    def _draw_live_baseball(self, game):
         homescore = game['homescore']
         awayscore = game['awayscore']
         print("home: ", homescore, "away: ", awayscore)

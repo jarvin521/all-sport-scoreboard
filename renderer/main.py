@@ -104,7 +104,7 @@ class MainRenderer:
                 self._draw_post_game(game)
         else:
             debug.info('Live State, checking every 5s')
-            if game['league'] == 'mlb' or game['league'] == 'ncaa-baseball':
+            if game['league'] == 'mlb' or game['sport'] == 'baseball':
                 self._draw_live_baseball(game)
             else:
                 self._draw_live_game(game)

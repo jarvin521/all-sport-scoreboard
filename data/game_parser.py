@@ -3,8 +3,14 @@ import datetime
 import time as t
 #from utils import convert_time
 
-URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard", "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard", "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard", \
-    "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard", "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard", "http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard" ]
+URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard", 
+        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard",
+        "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard", 
+        "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard", 
+        "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard", 
+        "http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard",
+        "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
+        ]
 
 #URLs = ["http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard"]
 def get_all_games():

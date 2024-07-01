@@ -59,7 +59,6 @@ git clone https://github.com/hzeller/rpi-rgb-led-matrix.git matrix
 cd matrix
 make build-python
 apt-get install python3-pip
-pip install rgbmatrix
 pip install RGBMatrixEmulator
 pip install requests
 pip install tzlocal

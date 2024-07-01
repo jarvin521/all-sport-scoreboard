@@ -54,7 +54,7 @@ sudo apt-get install git python-pip
 You can probably use the include install.sh like MountainMike does, but it wasn't working for me so I walked through his script manually and ended up doing the following to get things to work.
 
 ```
-git clone --recursive https://github.com/mikemountain/nfl-led-scoreboard
+git clone --recursive https://github.com/jarvin521/all-sport-scoreboard.git
 git clone https://github.com/hzeller/rpi-rgb-led-matrix.git matrix
 cd matrix
 make build-python

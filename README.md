@@ -17,8 +17,8 @@ Currently shows the team logos and the game time. ![pregame](imgs/pre_game.jpg)
 
 ### Live scoring updates 
 The score updates every 3 seconds.
-- MLB games include the team's logos, the count with red, green, and blue dots, and the bases indicate runners on. [mlb-image](imgs/MLB_mid_game.jpg)
-- NBA, NCAA Basketball, NHL games display the team's logos, scores, time and period. [basketball-image](imgs/NBA_mid_game.jpg)
+- MLB games include the team's logos, the count with red, green, and blue dots, and the bases indicate runners on. ![mlb-image](imgs/MLB_mid_game.jpg)
+- NBA, NCAA Basketball, NHL games display the team's logos, scores, time and period. ![basketball-image](imgs/NBA_mid_game.jpg)
 - NFL and NCAA Football should do what MikeMountain's scoreboard does, but being that we're not in season I haven't been able to validate it yet.  Coming this fall!
 
 ### Postgame

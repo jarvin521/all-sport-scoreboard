@@ -62,7 +62,6 @@ apt-get install python3-pip
 pip install rgbmatrix
 pip install RGBMatrixEmulator
 pip install requests
-pip install json
 pip install tzlocal
 pip install pytz
 ```

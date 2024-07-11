@@ -1,6 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
-from rgbmatrix import graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+#from rgbmatrix import graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 from utils import center_text
 from calendar import month_abbr
 from datetime import datetime, timedelta

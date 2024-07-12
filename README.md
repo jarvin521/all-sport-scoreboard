@@ -15,7 +15,7 @@ I had trouble collecting the NCAA teams though because the ESPN API limited its 
 ### Pregame
 Currently shows the team logos and the game time. ![pregame](imgs/pre_game.jpg)
 
-### Live scoring updates 
+### Live scoring updates
 The score updates every 3 seconds.
 - MLB games include the team's logos, the count with red, green, and blue dots, and the bases indicate runners on. ![mlb-image](imgs/MLB_mid_game.jpg)
 - NBA, NCAA Basketball, NHL games display the team's logos, scores, time and period. ![basketball-image](imgs/NBA_mid_game.jpg)
@@ -69,7 +69,7 @@ pip install pytz
 [requests](https://requests.kennethreitz.org/en/master/): To call the API and manipulate the received data.
 
 ## Testing & Optimization (IMPORTANT)
-If you have used a LED matrix on a raspberry pi before and know how to run it properly, then you can skip this part. 
+If you have used a LED matrix on a raspberry pi before and know how to run it properly, then you can skip this part.
 
 If you just bought your LED matrix and want to run this software right away, reference the [rpi-rgb-led-matrix library](https://github.com/hzeller/rpi-rgb-led-matrix/). Check out the section that uses the python bindings and run some of their examples on your screen. For sure you will face some issues at first, but don't worry, more than likely there's a solution you can find in their troubleshooting section.
 Once you found out how to make it run smoothly, come back here and do what's next.
@@ -93,9 +93,13 @@ sudo python main.py --led-gpio-mapping=adafruit-hat-pwm --led-brightness=60 --le
 ## Usage
 Open `/data/game_parser.py` and in the main fuction there are a bunch of loops and if statements. Add your favorite teams in the corresponding sports loop.  Just add a space `" "` to collect all teams. I'm hopefully going to improve this section soon!
 
-Now, in a terminal, cd to the nfl-led-scoreboard folder and run this command. 
+I've added a new list of for NCAAF Conferences.  You can add the conferences you want to get the scores for in that list to loop through those teams instead of all NCAAF teams or having to "if" yourself to death with all the teams you want to see in teh game_parser.py.
+
+Still by no means anywhere near perfect, but its been running smoothly for a few months now!
+
+Now, in a terminal, cd to the all-sport-scoreboard folder and run this command.
 ```
-sudo python main.py 
+sudo python main.py
 ```
 **If you run your screen on an Adafruit HAT or Bonnet, you need to supply this flag.**
 ```

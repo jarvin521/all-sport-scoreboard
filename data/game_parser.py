@@ -15,7 +15,7 @@ conferences = ["SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
 
-URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"]
+#URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"]
 def get_all_games():
     for i in range(5):
         try:

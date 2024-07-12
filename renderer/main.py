@@ -120,26 +120,26 @@ class MainRenderer:
                 #date_text = gamedatetime.strftime('%#m/%#d')  # Windows
             gametime = gamedatetime.strftime("%-I:%M %p")  # Mac
             #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
-            
-            # Center the game time on screen.                
+
+            # Center the game time on screen.
             date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32)
             gametime_pos = center_text(self.font_mini.getbbox(gametime)[2], 32)
-            
+
             # Draw the text on the Data image.
             self.draw.text((date_pos, 0), date_text, font=self.font_mini)
             self.draw.multiline_text((gametime_pos, 6), gametime, fill=(255, 255, 255), font=self.font_mini, align="center")
             self.draw.text((25, 15), 'VS', font=self.font)
-            
+
             # self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_micro, fill=(0, 255, 0))
             # self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_micro, fill=(0, 255, 0))
-    
+
             # Put the data on the canvas
             self.canvas.SetImage(self.image, 0, 0)
-            
+
             # TEMP Open the logo image file
             away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
             home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
-            
+
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 14)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
@@ -149,7 +149,7 @@ class MainRenderer:
             # Refresh the Data image.
             self.image = Image.new('RGB', (self.width, self.height))
             self.draw = ImageDraw.Draw(self.image)
-    
+
     def _draw_live_baseball(self, game):
         homescore = game['homescore']
         awayscore = game['awayscore']
@@ -161,7 +161,7 @@ class MainRenderer:
         else:
             quarter = f"B{game['quarter']}"
             quarter_position = 26
-        # Image for the bases; could definitely be better code here    
+        # Image for the bases; could definitely be better code here
         if not game['1b'] and not game['2b'] and not game['3b']:
             bases = Image.open('logos/scoreboard/Bases_0.png').resize((32, 24), Image.BOX)
         elif game['1b'] and not game['2b'] and not game['3b']:
@@ -212,10 +212,10 @@ class MainRenderer:
         elif game['outs'] == 2:
             outs = Image.open('logos/scoreboard/Outs_2.png').resize((6, 3), Image.BOX)
         elif game['outs'] == 3:
-            outs = Image.open('logos/scoreboard/Outs_2.png').resize((6, 3), Image.BOX) 
+            outs = Image.open('logos/scoreboard/Outs_2.png').resize((6, 3), Image.BOX)
         else:
             outs = Image.open('logos/scoreboard/Outs_0.png').resize((6, 3), Image.BOX)
-        
+
         # Set the position of the information on screen.
         homescore = '{0:d}'.format(homescore)
         awayscore = '{0:d}'.format(awayscore)
@@ -228,11 +228,11 @@ class MainRenderer:
 
         # Put the data on the canvas
         self.canvas.SetImage(self.image, 0, 0)
-        
+
         # TEMP Open the logo image file
         away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
         home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
-        
+
         # Put the image on the canvas
         self.canvas.SetImage(bases.convert("RGB"), 16, 17)
         self.canvas.SetImage(balls.convert("RGB"), 20, 15)
@@ -243,15 +243,15 @@ class MainRenderer:
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
-        
+
         # Refresh the Data image.
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
-        
+
         # Check if the game is over
         if game['state'] == 'post':
             debug.info('GAME OVER')
-        
+
         # Save the scores.
         self.data.needs_refresh = True
 
@@ -294,28 +294,28 @@ class MainRenderer:
         homescore = '{0:d}'.format(homescore)
         awayscore = '{0:d}'.format(awayscore)
         home_score_size = self.font.getbbox(homescore)[2]
-        
+
         if game['league'] == 'nfl' or game['league'] == 'ncaa':
             info_pos = center_text(self.font_mini.getbbox(pos)[2], 32)
             self.draw.multiline_text((info_pos, 13), pos, fill=pos_colour, font=self.font_mini, align="center")
         else:
             print("maybe more here")
-            
+
         self.draw.multiline_text((quarter_position, 0), quarter, fill=(255, 255, 255), font=self.font, align="center")
         self.draw.multiline_text((6, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
         self.draw.multiline_text((59 - home_score_size, 19), homescore, fill=(255, 255, 255), font=self.font, align="center")
-        
+
         # Put the data on the canvas
         self.canvas.SetImage(self.image, 0, 0)
-        
+
         # TEMP Open the logo image file
         away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
         home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
-        
+
         # Put the images on the canvas
         self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 1)
         self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 1)
-        
+
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
         # Refresh the Data image.
@@ -328,8 +328,8 @@ class MainRenderer:
         self.data.needs_refresh = True
 
     def _draw_postponed(self, game):
-              
-        # # Set the position of the information on screen. 
+
+        # # Set the position of the information on screen.
         self.draw.multiline_text((25, 2), "PPD", fill=(255, 255, 255), font=self.font_mini, align="center")
 
         # Put the data on the canvas
@@ -339,12 +339,12 @@ class MainRenderer:
         away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
         home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
         rain = Image.open('logos/rain.bmp').resize((16, 16), Image.BOX)
-        
+
         # Put the images on the canvas
         self.canvas.SetImage(rain.convert("RGB"), 24, 12)
         self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 7)
         self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 7)
-       
+
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
@@ -366,7 +366,7 @@ class MainRenderer:
         # TEMP Open the logo image file
         away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
         home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
-        
+
         # Put the images on the canvas
         self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
         self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)

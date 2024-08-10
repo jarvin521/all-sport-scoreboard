@@ -270,36 +270,11 @@ class MainRenderer:
             time_period = game['time']
             time_period_pos = center_text(self.font_mini.getbbox(time_period)[2], 32)
             self.draw.multiline_text((time_period_pos, 14), time_period, fill=(255, 255, 255), font=self.font_mini, align="center")
-        if game['league'] == 'nfl' or game['league'] == 'ncaa':
-            if game['possession'] == game['awayid']:
-                pos = game['awayteam']
-            else:
-                pos = game['hometeam']
-                # this is ugly but I want to replace the possession info with down info and spot info
-            down = None
-            spot = None
-            game_info = None
-            if game['down']:
-                down = re.sub(r"[a-z]+", "", game['down']).replace(" ", "")
-                info_pos = center_text(self.font_mini.getbbox(str(down))[2], 32)
-                self.draw.multiline_text((info_pos, 19), str(down), fill=(255, 255, 255), font=self.font_mini, align="center")
-            if game['spot']:
-                spot = game['spot'].replace(" ", "")
-                info_pos = (self.font_mini.getbbox(spot)[2], 32)
-                self.draw.multiline_text((info_pos, 25), spot, fill=(255, 255, 255), font=self.font_mini, align="center")
-            pos_colour = (255, 255, 255)
-            if game['redzone']:
-                pos_colour = (255, 25, 25)
+
         # Set the position of the information on screen.
         homescore = '{0:d}'.format(homescore)
         awayscore = '{0:d}'.format(awayscore)
         home_score_size = self.font.getbbox(homescore)[2]
-
-        if game['league'] == 'nfl' or game['league'] == 'ncaa':
-            info_pos = center_text(self.font_mini.getbbox(pos)[2], 32)
-            self.draw.multiline_text((info_pos, 13), pos, fill=pos_colour, font=self.font_mini, align="center")
-        else:
-            print("maybe more here")
 
         self.draw.multiline_text((quarter_position, 0), quarter, fill=(255, 255, 255), font=self.font, align="center")
         self.draw.multiline_text((6, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
@@ -368,8 +343,12 @@ class MainRenderer:
         home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
 
         # Put the images on the canvas
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
+        if game['league'] == 'mlb':
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 4)
+            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 4)
+        else:
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
+            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)

@@ -27,7 +27,7 @@ def get_all_games():
                     info = g['competitions'][0]
                     odds = info.get('odds', [{}])[0]
                     if "nfl" in URL:
-                        if "CincinnatiBengals" in g['name'] or " " in g['name']:
+                        if "Cincinnati Bengals" in g['name'] or " " in g['name']:
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'nfl', 'sport': 'football',
                                 'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                                 'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),

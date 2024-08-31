@@ -5,17 +5,16 @@ import time as t
 
 URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard",
-        "http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard",
+        "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
         ]
-conferences = ["Favorites"]
+conferences = ["Favorites", "SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
 
-#URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"]
 def get_all_games():
     for i in range(5):
         try:

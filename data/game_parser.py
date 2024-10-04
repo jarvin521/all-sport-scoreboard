@@ -6,6 +6,7 @@ import time as t
 URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard",
         "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200",
+        "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
@@ -74,7 +75,7 @@ def get_all_games():
                                 game['spread'] = None
                             games.append(game)
                     if "mens-college-basketball" in URL:
-                        if "Kentucky Wildcats" in g['name']: # or " " in g['name']:
+                        if "Kentucky~Wildcats" in g['name']: # or " " in g['name']:
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'basketball',
                                 'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                                 'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),

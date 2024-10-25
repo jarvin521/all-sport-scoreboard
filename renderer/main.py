@@ -144,6 +144,11 @@ class MainRenderer:
             self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 14)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
 
+            # Add a basketball or football to the top right corner to differentiate between college games
+            if game['league'] == 'ncaa':
+                sport_logo = Image.open('logos/scoreboard/{}.png'.format(game['sport'])).resize((8, 8), Image.BOX)
+                self.canvas.SetImage(sport_logo.convert("RGB"), 55, 1)
+
             # Load the canvas on screen.
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
             # Refresh the Data image.

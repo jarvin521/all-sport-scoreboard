@@ -43,24 +43,23 @@ def get_all_games():
                                 game['spread'] = None
                             games.append(game)
                     if "college-football" in URL:
-                        if not info['status']['type']['state'] == 'post':
-                            for conference in conferences:
-                                for team in ncaaf_json[conference]:
-                                    if team in g['name']:
-                                        game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'football',
-                                            'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                            'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                            'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
-                                            'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                                            'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
-                                            'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                                        if odds:
-                                            game['overUnder'] = odds.get('overUnder')
-                                            game['spread'] = odds.get('spread')
-                                        else:
-                                            game['overUnder'] = None
-                                            game['spread'] = None
-                                        games.append(game)
+                        for conference in conferences:
+                            for team in ncaaf_json[conference]:
+                                if team in g['name']:
+                                    game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'football',
+                                        'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
+                                        'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
+                                        'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
+                                        'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
+                                        'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
+                                        'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
+                                    if odds:
+                                        game['overUnder'] = odds.get('overUnder')
+                                        game['spread'] = odds.get('spread')
+                                    else:
+                                        game['overUnder'] = None
+                                        game['spread'] = None
+                                    games.append(game)
                     if "nba" in URL:
                         if "Minnesota Timberwolves" in g['name']:
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'nba', 'sport': 'basketball',

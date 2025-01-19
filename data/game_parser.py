@@ -13,6 +13,7 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
         ]
 conferences = ["Favorites", "SEC"]
+conferences = []
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
 

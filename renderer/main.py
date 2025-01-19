@@ -333,31 +333,30 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
 
     def _draw_post_game(self, game):
-        if not game['league'] == 'ncaa' and not game['sport'] == 'football':
-            self.draw.multiline_text((21, 0), "FINAL", fill=(255, 255, 255), font=self.font_mini,align="center")
-            score = '{}-{}'.format(game['awayscore'], game['homescore'])
-            # Set the position of the information on screen.
-            score_position = center_text(self.font.getbbox(score)[2], 32)
-            # Draw the text on the Data image.
-            self.draw.multiline_text((score_position, 19), score, fill=(255, 255, 255), font=self.font, align="center")
+        self.draw.multiline_text((21, 0), "FINAL", fill=(255, 255, 255), font=self.font_mini,align="center")
+        score = '{}-{}'.format(game['awayscore'], game['homescore'])
+        # Set the position of the information on screen.
+        score_position = center_text(self.font.getbbox(score)[2], 32)
+        # Draw the text on the Data image.
+        self.draw.multiline_text((score_position, 19), score, fill=(255, 255, 255), font=self.font, align="center")
 
-            # Put the data on the canvas
-            self.canvas.SetImage(self.image, 0, 0)
+        # Put the data on the canvas
+        self.canvas.SetImage(self.image, 0, 0)
 
-            # TEMP Open the logo image file
-            away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
-            home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
+        # TEMP Open the logo image file
+        away_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['awayteam'])).resize((16, 16), Image.BOX)
+        home_team_logo = Image.open('logos/{}/{}.png'.format(game['league'], game['hometeam'])).resize((16, 16), Image.BOX)
 
-            # Put the images on the canvas
-            if game['league'] == 'nba':
-                self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
-                self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
-            else:
-                self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 4)
-                self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 4)
+        # Put the images on the canvas
+        if game['league'] == 'nba':
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
+            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
+        else:
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 4)
+            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 4)
 
-            # Load the canvas on screen.
-            self.canvas = self.matrix.SwapOnVSync(self.canvas)
-            # Refresh the Data image.
-            self.image = Image.new('RGB', (self.width, self.height))
-            self.draw = ImageDraw.Draw(self.image)
+        # Load the canvas on screen.
+        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        # Refresh the Data image.
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)

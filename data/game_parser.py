@@ -12,7 +12,7 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
         ]
-conferences = ["Favorites", "SEC"]
+#conferences = ["Favorites", "SEC"]
 conferences = []
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
@@ -76,7 +76,7 @@ def get_all_games():
                                 game['spread'] = None
                             games.append(game)
                     if "mens-college-basketball" in URL:
-                        if "Kentucky Wildcats" in g['name'] or "SEC" in info['groups']['shortName']:
+                        if "Kentucky Wildcats" in g['name'] or "SEC" in info.get('groups', {}).get('shortName', ''):
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'basketball',
                                 'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                                 'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
@@ -90,7 +90,7 @@ def get_all_games():
                                 game['spread'] = None
                             games.append(game)
                     if "mlb" in URL:
-                        if "Reds" in g['name'] or " " in g['name']:
+                        if "~" in g['name'] or "~" in g['name']:
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'mlb', 'sport': 'baseball',
                                 'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                                 'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),

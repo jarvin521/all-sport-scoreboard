@@ -128,7 +128,7 @@ class MainRenderer:
             # Draw the text on the Data image.
             self.draw.text((date_pos, 0), date_text, font=self.font_mini)
             self.draw.multiline_text((gametime_pos, 6), gametime, fill=(255, 255, 255), font=self.font_mini, align="center")
-            self.draw.text((25, 15), 'VS', font=self.font)
+            self.draw.text((26, 15), 'VS', font=self.font)
 
             # self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_micro, fill=(0, 255, 0))
             # self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_micro, fill=(0, 255, 0))

@@ -322,7 +322,7 @@ class MainRenderer:
 
         # Put the images on the canvas
         self.canvas.SetImage(rain.convert("RGB"), 24, 12)
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 7)
+        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 7)
         self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 7)
 
         # Load the canvas on screen.
@@ -349,10 +349,10 @@ class MainRenderer:
 
         # Put the images on the canvas
         if game['league'] == 'nba':
-            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 2)
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 2)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
         else:
-            self.canvas.SetImage(away_team_logo.convert("RGB"), 2, 4)
+            self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 4)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 4)
 
         # Load the canvas on screen.

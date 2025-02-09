@@ -122,8 +122,8 @@ class MainRenderer:
             #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
             # Center the game time on screen.
-            date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32)
-            gametime_pos = center_text(self.font_mini.getbbox(gametime)[2], 32)
+            date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
+            gametime_pos = center_text(self.font_mini.getbbox(gametime)[2], 32) + 1
 
             # Draw the text on the Data image.
             self.draw.text((date_pos, 0), date_text, font=self.font_mini)

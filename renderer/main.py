@@ -142,7 +142,7 @@ class MainRenderer:
 
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 14)
-            self.canvas.SetImage(home_team_logo.convert("RGB"), 44, 14)
+            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
 
             # Add a basketball or football to the top right corner to differentiate between college games
             if game['league'] == 'ncaa':
@@ -244,7 +244,7 @@ class MainRenderer:
         self.canvas.SetImage(strikes.convert("RGB"), 30, 15)
         self.canvas.SetImage(outs.convert("RGB"), 37, 15)
         self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 1)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 44, 1)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 1)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
@@ -294,7 +294,7 @@ class MainRenderer:
 
         # Put the images on the canvas
         self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 1)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 44, 1)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 1)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)

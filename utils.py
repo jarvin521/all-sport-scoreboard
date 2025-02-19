@@ -1,5 +1,5 @@
-from rgbmatrix import RGBMatrixOptions, graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
+#from rgbmatrix import RGBMatrixOptions, graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
 import collections
 import argparse
 import os

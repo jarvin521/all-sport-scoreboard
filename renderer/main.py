@@ -91,6 +91,7 @@ class MainRenderer:
     def __draw_game(self, game):
         time = datetime.now()
         gametime = datetime.strptime(game['date'], "%Y-%m-%dT%H:%MZ") # Mac
+        #gametime = datetime.strftime(game['date'], "%#I:%M %#p")  # Windows
         debug.info(game['name'])
         if time < gametime and game['state'] == 'pre':
             debug.info('Pre-Game State')

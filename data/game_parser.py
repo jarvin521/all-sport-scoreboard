@@ -13,6 +13,8 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
         ]
 
+URLs = ["http://site.api.espn.com/apis/site/v2/sports/hockey/mens-college-hockey/scoreboard"]
+
 # URLs = ["http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
 #         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=23", #SEC
 #         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=2", #ACC
@@ -129,6 +131,20 @@ def get_all_games():
                             games.append(game)
                     if "nhl" in URL:
                         if "Minnesota Wild" in g['name'] or "USA" in g['name']:
+                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'nhl', 'sport': 'hockey',
+                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
+                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
+                                'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
+                                'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
+                            if odds:
+                                game['overUnder'] = odds.get('overUnder')
+                                game['spread'] = odds.get('spread')
+                            else:
+                                game['overUnder'] = None
+                                game['spread'] = None
+                            games.append(game)
+                    if "college-hockey" in URL:
+                        if any(team in g['name'] for team in ["North Dakota"]):
                             game = {'name': g['shortName'], 'date': g['date'], 'league': 'nhl', 'sport': 'hockey',
                                 'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                                 'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),

@@ -25,6 +25,40 @@ conferences = [] #["Favorites", "SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
 
+#Collect properties that are common to all sports
+def create_game(g, info, league, sport, extra_fields=None):
+    game = {
+        'name': g['shortName'],
+        'date': g['date'],
+        'league': league,
+        'sport': sport,
+        'hometeam': info['competitors'][0]['team']['abbreviation'],
+        'homeid': info['competitors'][0]['id'],
+        'homescore': int(info['competitors'][0]['score']),
+        'awayteam': info['competitors'][1]['team']['abbreviation'],
+        'awayid': info['competitors'][1]['id'],
+        'awayscore': int(info['competitors'][1]['score']),
+        'time': info['status']['displayClock'],
+        'quarter': info['status']['period'],
+        'over': info['status']['type']['completed'],
+        'state': info['status']['type']['state'],
+        'stateDetail': info['status']['type']['shortDetail']
+    }
+    if extra_fields:
+        game.update(extra_fields)
+    return game
+
+#Collect properties that are specific to baseball
+def get_baseball_extra_fields(info):
+    return {
+        '1b': info.get("situation", {}).get("onFirst"),
+        '2b': info.get("situation", {}).get("onSecond"),
+        '3b': info.get("situation", {}).get("onThird"),
+        'balls': info.get('situation', {}).get('balls'),
+        'strikes': info.get('situation', {}).get('strikes'),
+        'outs': info.get('situation', {}).get('outs')
+    }
+
 def get_all_games():
     for i in range(5):
         try:
@@ -37,109 +71,33 @@ def get_all_games():
                     odds = info.get('odds', [{}])[0]
                     if "nfl" in URL:
                         if "~" in g['name']: #or " " in g['name']:
-                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'nfl', 'sport': 'football',
-                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
-                                'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                                'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
-                                'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                            if odds:
-                                game['overUnder'] = odds.get('overUnder')
-                                game['spread'] = odds.get('spread')
-                            else:
-                                game['overUnder'] = None
-                                game['spread'] = None
+                            game = create_game(g, info, 'ncaa', 'football')
                             games.append(game)
                     if "college-football" in URL:
                         for conference in conferences:
                             for team in ncaaf_json[conference]:
                                 if team in g['name']:
-                                    game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'football',
-                                        'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                        'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                        'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
-                                        'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                                        'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
-                                        'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                                    if odds:
-                                        game['overUnder'] = odds.get('overUnder')
-                                        game['spread'] = odds.get('spread')
-                                    else:
-                                        game['overUnder'] = None
-                                        game['spread'] = None
+                                    game = create_game(g, info, 'ncaa', 'football')
                                     games.append(game)
                     if "nba" in URL:
                         if "Minnesota Timberwolves" in g['name']:
-                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'nba', 'sport': 'basketball',
-                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                                'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                            if odds:
-                                game['overUnder'] = odds.get('overUnder')
-                                game['spread'] = odds.get('spread')
-                            else:
-                                game['overUnder'] = None
-                                game['spread'] = None
+                            game = create_game(g, info, 'ncaa', 'basketball')
                             games.append(game)
                     if "mens-college-basketball" in URL: 
                         #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
-                        game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'basketball',
-                            'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                            'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                            'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                            'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                        if odds:
-                            game['overUnder'] = odds.get('overUnder')
-                            game['spread'] = odds.get('spread')
-                        else:
-                            game['overUnder'] = None
-                            game['spread'] = None
+                        game = create_game(g, info, 'ncaa', 'basketball')
                         games.append(game)
                     if "mlb" in URL:
                         if "~" in g['name'] or "~" in g['name']:
-                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'mlb', 'sport': 'baseball',
-                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                'quarter': info['status']['period'], '1b' :info.get("situation", {}).get("onFirst"), '2b': info.get("situation", {}).get("onSecond"), '3b': info.get("situation", {}).get("onThird"),
-                                'balls': info.get('situation', {}).get('balls'), 'strikes': info.get('situation', {}).get('strikes'), 'outs': info.get('situation', {}).get('outs'),
-                                'over': info['status']['type']['completed'],'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                            if odds:
-                                game['overUnder'] = odds.get('overUnder')
-                                game['spread'] = odds.get('spread')
-                            else:
-                                game['overUnder'] = None
-                                game['spread'] = None
+                            game = create_game(g, info, 'ncaa', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "college-baseball" in URL:
-                        if "~" in g['name']:
-                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'ncaa', 'sport': 'baseball',
-                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                'quarter': info['status']['period'], '1b' :info.get("situation", {}).get("onFirst"), '2b': info.get("situation", {}).get("onSecond"), '3b': info.get("situation", {}).get("onThird"),
-                                'balls': info.get('situation', {}).get('balls'), 'strikes': info.get('situation', {}).get('strikes'), 'outs': info.get('situation', {}).get('outs'),
-                                'over': info['status']['type']['completed'],'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                            if odds:
-                                game['overUnder'] = odds.get('overUnder')
-                                game['spread'] = odds.get('spread')
-                            else:
-                                game['overUnder'] = None
-                                game['spread'] = None
+                        if "Kentucky Wildcats" in g['name']:
+                            game = create_game(g, info, 'ncaa', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "nhl" in URL:
                         if "Minnesota Wild" in g['name'] or "USA" in g['name']:
-                            game = {'name': g['shortName'], 'date': g['date'], 'league': 'nhl', 'sport': 'hockey',
-                                'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
-                                'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                                'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                                'state': info['status']['type']['state'], 'stateDetail': info['status']['type']['shortDetail']}
-                            if odds:
-                                game['overUnder'] = odds.get('overUnder')
-                                game['spread'] = odds.get('spread')
-                            else:
-                                game['overUnder'] = None
-                                game['spread'] = None
+                            game = create_game(g, info, 'ncaa', 'football')
                             games.append(game)
             return games
         except requests.exceptions.RequestException as e:

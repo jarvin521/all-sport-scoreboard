@@ -4,7 +4,7 @@ import time as t
 #from utils import convert_time
 
 URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
+        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100", #NCAA Tournament
         "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200", #D1-FCS
         "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200", #D1-FBS
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
@@ -68,10 +68,9 @@ def get_all_games():
                 res = response.json()
                 for g in res['events']:
                     info = g['competitions'][0]
-                    odds = info.get('odds', [{}])[0]
                     if "nfl" in URL:
                         if "~" in g['name']: #or " " in g['name']:
-                            game = create_game(g, info, 'ncaa', 'football')
+                            game = create_game(g, info, 'nfl', 'football')
                             games.append(game)
                     if "college-football" in URL:
                         for conference in conferences:
@@ -81,7 +80,7 @@ def get_all_games():
                                     games.append(game)
                     if "nba" in URL:
                         if "Minnesota Timberwolves" in g['name']:
-                            game = create_game(g, info, 'ncaa', 'basketball')
+                            game = create_game(g, info, 'nba', 'basketball')
                             games.append(game)
                     if "mens-college-basketball" in URL: 
                         #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
@@ -89,7 +88,7 @@ def get_all_games():
                         games.append(game)
                     if "mlb" in URL:
                         if "~" in g['name'] or "~" in g['name']:
-                            game = create_game(g, info, 'ncaa', 'baseball', get_baseball_extra_fields(info))
+                            game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "college-baseball" in URL:
                         if "Kentucky Wildcats" in g['name']:
@@ -97,7 +96,7 @@ def get_all_games():
                             games.append(game)
                     if "nhl" in URL:
                         if "Minnesota Wild" in g['name'] or "USA" in g['name']:
-                            game = create_game(g, info, 'ncaa', 'football')
+                            game = create_game(g, info, 'nhl', 'football')
                             games.append(game)
             return games
         except requests.exceptions.RequestException as e:

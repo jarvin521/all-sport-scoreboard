@@ -38,7 +38,7 @@ def create_game(g, info, league, sport, extra_fields=None):
         'awayteam': info['competitors'][1]['team']['abbreviation'],
         'awayid': info['competitors'][1]['id'],
         'awayscore': int(info['competitors'][1]['score']),
-        'time': info['status']['displayClock'],
+        'time': info.get('status', {}).get('displayClock'),
         'quarter': info['status']['period'],
         'over': info['status']['type']['completed'],
         'state': info['status']['type']['state'],
@@ -107,3 +107,7 @@ def get_all_games():
                 print("Can't hit ESPN api after multiple retries, dying ", e)
         except Exception as e:
             print("something bad?", e)
+            print(info)
+            print(game)
+            # sleep 60 seconds
+            t.sleep(60)

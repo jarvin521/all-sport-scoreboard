@@ -1,21 +1,12 @@
 {
-	"preferred": {
-		"teams": ["BUF", "NO", "TB"]
-	},
 	"rotation": {
 		"enabled": true,
-		"only_preferred": false,
 		"rates": {
 			"live": 5.0,
 			"final": 5.0,
 			"pregame": 5.0
-		},
-		"while_preferred_team_live": {
-			"enabled": true,
-			"during_halftime": true
 		}
 	},
-    "scrolling_speed": 2,
-    "use_helmet_logos": false,
+    "scrolling_speed": 5,
     "debug": "false"
 }

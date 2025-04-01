@@ -87,7 +87,7 @@ def get_all_games():
                         game = create_game(g, info, 'ncaa', 'basketball')
                         games.append(game)
                     if "mlb" in URL:
-                        if "~" in g['name'] or "~" in g['name']:
+                        if "Cincinnati Reds" in g['name'] or "Minnesota Twins" in g['name']:
                             game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "college-baseball" in URL:

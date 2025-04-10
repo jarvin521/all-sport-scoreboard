@@ -479,16 +479,16 @@ class MainRenderer:
         for i, leader in enumerate(game['leader_scores']):
             # Extract golfer details
             short_name = leader['golfer']
-            score = leader['score']
+            score = f"{int(leader['score']):+d}"
             hole_number = leader['hole']
 
             # Calculate the y-position for each golfer (spacing by 6 pixels)
             y_position = i * 6
 
             # Draw the golfer's short name, score, and hole number
-            self.draw.text((short_name_x, y_position), short_name, font=self.font_micro, fill=(255, 255, 255))
-            self.draw.text((score_x, y_position), score, font=self.font_micro, fill=(255, 255, 255))
-            self.draw.text((hole_x, y_position), str(hole_number), font=self.font_micro, fill=(255, 255, 255))
+            self.draw.text((short_name_x, y_position), short_name, font=self.font_mini, fill=(255, 255, 255))
+            self.draw.text((score_x, y_position), score, font=self.font_mini, fill=(255, 255, 255))
+            self.draw.text((hole_x, y_position), str(hole_number), font=self.font_mini, fill=(255, 255, 255))
 
         # Update the canvas
         self.canvas.SetImage(self.image, 0, 0)

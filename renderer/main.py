@@ -495,7 +495,7 @@ class MainRenderer:
                 short_name = f"{first_name} {last_name}"
 
             # Calculate the y-position for each golfer (spacing by 6 pixels)
-            y_position = i * 6
+            y_position = 10 + i * 6
 
             # Draw the golfer's short name, score, and hole number
             self.draw.text((short_name_x, y_position), short_name, font=self.font_mini, fill=(255, 255, 255))

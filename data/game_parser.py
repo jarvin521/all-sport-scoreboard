@@ -105,10 +105,11 @@ def get_all_games():
                         if "Minnesota Timberwolves" in g['name']:
                             game = create_game(g, info, 'nba', 'basketball')
                             games.append(game)
-                    if "mens-college-basketball" in URL: 
+                    if "mens-college-basketball" in URL:
+                        if "~" in g['name']: 
                         #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
-                        game = create_game(g, info, 'ncaa', 'basketball')
-                        games.append(game)
+                            game = create_game(g, info, 'ncaa', 'basketball')
+                            games.append(game)
                     if "mlb" in URL:
                         if "Cincinnati Reds" in g['name'] or "Minnesota Twins" in g['name']:
                             game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))

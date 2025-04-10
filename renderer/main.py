@@ -93,7 +93,7 @@ class MainRenderer:
         if game['sport'] == 'golf':
             if time < gametime and game['state'] == 'pre':
                 debug.info('Golf State')
-                self._draw_live_golf(game)
+                self._draw_pre_golf(game)
             elif game['state'] == 'post':
                 if game['stateDetail'] == 'Postponed':
                     debug.info('Postponed')

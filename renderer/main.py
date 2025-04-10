@@ -476,7 +476,10 @@ class MainRenderer:
         hole_x = 52
 
         # Draw the tournament name centered at the top in green
-        tournament_name = game['name']
+        if game['name'] == 'Masters Tournament':
+            tournament_name = "The Masters"
+        else:
+            tournament_name = game['name']
         tournament_width = self.font_mini.getbbox(tournament_name)[2]
         tournament_x = (self.width - tournament_width) // 2  # Center horizontally
         self.draw.text((tournament_x, 0), tournament_name, font=self.font_mini, fill=(0, 255, 0))  # Green color

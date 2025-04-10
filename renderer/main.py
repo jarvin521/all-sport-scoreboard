@@ -1,6 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
-#from rgbmatrix import graphics
-from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+from rgbmatrix import graphics
+#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 from utils import center_text
 from calendar import month_abbr
 from datetime import datetime, timedelta
@@ -132,10 +132,10 @@ class MainRenderer:
             if gamedatetime.day == time.day:
                 date_text = 'TODAY'
             else:
-                #date_text = gamedatetime.strftime('%-m/%-d') # Mac
-                date_text = gamedatetime.strftime('%#m/%#d')  # Windows
-            #gametime = gamedatetime.strftime("%-I:%M %p") # Mac
-            gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+                date_text = gamedatetime.strftime('%-m/%-d') # Mac
+                #date_text = gamedatetime.strftime('%#m/%#d')  # Windows
+            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+            #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
             # Center the game time on screen.
             date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
@@ -436,8 +436,8 @@ class MainRenderer:
     def _draw_pre_golf(self, game):
         gametime = game['date']
         gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
-        #date_text = gamedate.strftime('%-m/%-d') # Mac
-        date_text = gamedate.strftime('%#m/%#d')  # Windows
+        date_text = gamedate.strftime('%-m/%-d') # Mac
+        #date_text = gamedate.strftime('%#m/%#d')  # Windows
 
         # Calculate the position to center the date text
         date_width = self.font_mini.getbbox(date_text)[2]

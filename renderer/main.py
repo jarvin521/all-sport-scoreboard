@@ -26,6 +26,8 @@ class MainRenderer:
         self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
     
     def __all_games_final(self):
+        print(games)
+        len(games)
         for game in self.data.games:
             if game['state'] != 'post':
                 return False

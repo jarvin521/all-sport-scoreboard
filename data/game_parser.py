@@ -10,7 +10,8 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
-        "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"
+        "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
+        'http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard'
         ]
 
 # URLs = ["http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
@@ -21,7 +22,6 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
 #         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7" #Big Ten
 #        ]
 
-URLs = ['http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard']
 conferences = [] #["Favorites", "SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
@@ -70,71 +70,6 @@ def get_golf(g, info, league, sport):
         'stateDetail': info['status']['type']['shortDetail']
     }
     top_three = sorted(info['competitors'], key=lambda x: x['sortOrder'])[:3]
-    top_three = [
-                    {
-                        "athlete": {
-                            "id": "3980",
-                            "uid": "s:1100~a:3980",
-                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
-                            "displayName": "Patton Kizzire",
-                            "shortName": "T. Woods"
-                        },
-                        "score": {
-                            "displayValue": "-9",
-                            "value": -7,
-                            "sortValue": -7
-                        },
-                        "status": {
-                            "hole": {
-                                "number": 18,
-                                "par": 4,
-                                "strokes": 4
-                            }
-                        }
-                    },
-                    {
-                        "athlete": {
-                            "id": "3980",
-                            "uid": "s:1100~a:3980",
-                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
-                            "displayName": "Patton Kizzire",
-                            "shortName": "R. Fowler"
-                        },
-                        "score": {
-                            "displayValue": "-2",
-                            "value": -7,
-                            "sortValue": -7
-                        },
-                        "status": {
-                            "hole": {
-                                "number": 16,
-                                "par": 4,
-                                "strokes": 4
-                            }
-                        }
-                    },
-                    {
-                        "athlete": {
-                            "id": "3980",
-                            "uid": "s:1100~a:3980",
-                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
-                            "displayName": "Patton Kizzire",
-                            "shortName": "J. Schmoe"
-                        },
-                        "score": {
-                            "displayValue": "+2",
-                            "value": -7,
-                            "sortValue": -7
-                        },
-                        "status": {
-                            "hole": {
-                                "number": 1,
-                                "par": 4,
-                                "strokes": 4
-                            }
-                        }
-                    }
-                ]
     leader_scores = []
     for i in top_three:
         leader_scores.append({

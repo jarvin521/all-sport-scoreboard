@@ -100,7 +100,7 @@ class MainRenderer:
                     self._draw_postponed(game)
                 else:
                     debug.info('Final State')
-                    self._draw_post_golf(game)
+                    #self._draw_post_golf(game)
             else:
                 self._draw_live_golf(game)
         else:
@@ -494,7 +494,7 @@ class MainRenderer:
             # Process the short_name to trim the last name to 4 letters
             if " " in short_name:
                 first_name, last_name = short_name.split(" ", 1)
-                last_name = last_name[:4]  # Trim the last name to 4 letters
+                last_name = last_name[:5]  # Trim the last name to 4 letters
                 short_name = f"{first_name} {last_name}"
 
             # Calculate the y-position for each golfer (spacing by 6 pixels)

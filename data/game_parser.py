@@ -21,6 +21,7 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
 #         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7" #Big Ten
 #        ]
 
+URLs = ['http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard']
 conferences = [] #["Favorites", "SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
@@ -58,6 +59,135 @@ def get_baseball_extra_fields(info):
         'strikes': info.get('situation', {}).get('strikes'),
         'outs': info.get('situation', {}).get('outs')
     }
+
+def get_golf(g, info, league, sport):
+    game = {
+        'name': g['shortName'],
+        'date': g['date'],
+        'league': league,
+        'sport': sport,
+        'state': info['status']['type']['state'],
+        'stateDetail': info['status']['type']['shortDetail']
+    }
+    top_five = sorted(info['competitors'], key=lambda x: x['sortOrder'])[:5]
+    top_five = [
+                    {
+                        "athlete": {
+                            "id": "3980",
+                            "uid": "s:1100~a:3980",
+                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
+                            "displayName": "Patton Kizzire",
+                            "shortName": "P. Kizzire"
+                        },
+                        "score": {
+                            "displayValue": "-7",
+                            "value": -7,
+                            "sortValue": -7
+                        },
+                        "status": {
+                            "hole": {
+                                "number": 18,
+                                "par": 4,
+                                "strokes": 4
+                            }
+                        }
+                    },
+                    {
+                        "athlete": {
+                            "id": "3980",
+                            "uid": "s:1100~a:3980",
+                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
+                            "displayName": "Patton Kizzire",
+                            "shortName": "R. Fowler"
+                        },
+                        "score": {
+                            "displayValue": "-2",
+                            "value": -7,
+                            "sortValue": -7
+                        },
+                        "status": {
+                            "hole": {
+                                "number": 16,
+                                "par": 4,
+                                "strokes": 4
+                            }
+                        }
+                    },
+                    {
+                        "athlete": {
+                            "id": "3980",
+                            "uid": "s:1100~a:3980",
+                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
+                            "displayName": "Patton Kizzire",
+                            "shortName": "J. Speith"
+                        },
+                        "score": {
+                            "displayValue": "-9",
+                            "value": -7,
+                            "sortValue": -7
+                        },
+                        "status": {
+                            "hole": {
+                                "number": 7,
+                                "par": 4,
+                                "strokes": 4
+                            }
+                        }
+                    },
+                    {
+                        "athlete": {
+                            "id": "3980",
+                            "uid": "s:1100~a:3980",
+                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
+                            "displayName": "Patton Kizzire",
+                            "shortName": "J. Schmoe"
+                        },
+                        "score": {
+                            "displayValue": "+2",
+                            "value": -7,
+                            "sortValue": -7
+                        },
+                        "status": {
+                            "hole": {
+                                "number": 1,
+                                "par": 4,
+                                "strokes": 4
+                            }
+                        }
+                    },
+                    {
+                        "athlete": {
+                            "id": "3980",
+                            "uid": "s:1100~a:3980",
+                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
+                            "displayName": "Karl Kizzire",
+                            "shortName": "K. Dandleton"
+                        },
+                        "score": {
+                            "displayValue": "-8",
+                            "value": -7,
+                            "sortValue": -7
+                        },
+                        "status": {
+                            "hole": {
+                                "number": 12,
+                                "par": 4,
+                                "strokes": 4
+                            }
+                        }
+                    }
+                ]
+    leader_scores = []
+    for i in top_five:
+        leader_scores.append({
+            'golfer': i['athlete']['shortName'],
+            'score': i['score']['displayValue'],
+            'hole': i.get('status', {}).get('hole', {}).get('number', None)
+        })
+    
+    # Add the leader_scores array to the game dictionary
+    game['leader_scores'] = leader_scores
+    return game
 
 def get_all_games():
     for i in range(5):
@@ -98,6 +228,11 @@ def get_all_games():
                         if "Minnesota Wild" in g['name'] or "USA" in g['name']:
                             game = create_game(g, info, 'nhl', 'football')
                             games.append(game)
+                    if "golf" in URL:
+                        if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
+                            game = get_golf(g, info, 'pga', 'golf')
+                            print(game)
+                            games.append(game)
             return games
         except requests.exceptions.RequestException as e:
             if i < 4:
@@ -107,7 +242,7 @@ def get_all_games():
                 print("Can't hit ESPN api after multiple retries, dying ", e)
         except Exception as e:
             print("something bad?", e)
-            print(info)
-            print(game)
+            #print(info)
+            #print(game)
             # sleep 60 seconds
             t.sleep(60)

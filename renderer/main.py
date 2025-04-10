@@ -1,6 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
-from rgbmatrix import graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+#from rgbmatrix import graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 from utils import center_text
 from calendar import month_abbr
 from datetime import datetime, timedelta
@@ -87,25 +87,39 @@ class MainRenderer:
 
     def __draw_game(self, game):
         time = datetime.now()
-        gametime = datetime.strptime(game['date'], "%Y-%m-%dT%H:%MZ") # Mac
-        #gametime = datetime.strptime(game['date'], "%#I:%M %#p")  # Windows
+        gametime = datetime.strptime(game['date'], "%Y-%m-%dT%H:%MZ")
         debug.info(game['name'])
-        if time < gametime and game['state'] == 'pre':
-            debug.info('Pre-Game State')
-            self._draw_pregame(game)
-        elif game['state'] == 'post':
-            if game['stateDetail'] == 'Postponed':
-                debug.info('Postponed')
-                self._draw_postponed(game)
+        # Trying to add some Golf to the scoreboard
+        if game['sport'] == 'golf':
+            if time < gametime and game['state'] == 'pre':
+                debug.info('Golf State')
+                self._draw_live_golf(game)
+            elif game['state'] == 'post':
+                if game['stateDetail'] == 'Postponed':
+                    debug.info('Postponed')
+                    self._draw_postponed(game)
+                else:
+                    debug.info('Final State')
+                    self._draw_post_golf(game)
             else:
-                debug.info('Final State')
-                self._draw_post_game(game)
+                self._draw_live_golf(game)
         else:
-            debug.info('Live State, checking every 5s')
-            if game['league'] == 'mlb' or game['sport'] == 'baseball':
-                self._draw_live_baseball(game)
+            if time < gametime and game['state'] == 'pre':
+                debug.info('Pre-Game State')
+                self._draw_pregame(game)
+            elif game['state'] == 'post':
+                if game['stateDetail'] == 'Postponed':
+                    debug.info('Postponed')
+                    self._draw_postponed(game)
+                else:
+                    debug.info('Final State')
+                    self._draw_post_game(game)
             else:
-                self._draw_live_game(game)
+                debug.info('Live State, checking every 5s')
+                if game['league'] == 'mlb' or game['sport'] == 'baseball':
+                    self._draw_live_baseball(game)
+                else:
+                    self._draw_live_game(game)
         #debug.info('ping render_game')
 
     def _draw_pregame(self, game):
@@ -114,10 +128,10 @@ class MainRenderer:
             if gamedatetime.day == time.day:
                 date_text = 'TODAY'
             else:
-                date_text = gamedatetime.strftime('%-m/%-d') # Mac
-                #date_text = gamedatetime.strftime('%#m/%#d')  # Windows
-            gametime = gamedatetime.strftime("%-I:%M %p")  # Mac
-            #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+                #date_text = gamedatetime.strftime('%-m/%-d') # Mac
+                date_text = gamedatetime.strftime('%#m/%#d')  # Windows
+            #gametime = gamedatetime.strftime("%-I:%M %p") #Mac
+            gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
             # Center the game time on screen.
             date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
@@ -413,3 +427,70 @@ class MainRenderer:
         # Refresh the Data image.
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
+
+
+    def _draw_pre_golf(self, game):
+        gametime = game['date']
+        gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
+        #date_text = gamedatetime.strftime('%-m/%-d') # Mac
+        date_text = gamedate.strftime('%#m/%#d')  # Windows
+        #gametime = gamedatetime.strftime("%-I:%M %p") #Mac
+
+        # Calculate the position to center the date text
+        date_width = self.font_mini.getbbox(date_text)[2]
+        date_x = (64 - date_width) // 2  # Center horizontally
+
+        # Draw the text on the Data image.
+        self.draw.text((date_x, 0), date_text, font=self.font_mini)
+
+        # Put the data on the canvas
+        self.canvas.SetImage(self.image, 0, 0)
+
+        golf_tournament_logo_path = 'logos/{}/{}.png'.format(game['league'], game['name'])
+        default_logo_path = 'logos/scoreboard/Missing.png'
+        
+        if os.path.exists(golf_tournament_logo_path):
+            golf_tournament_logo = Image.open(golf_tournament_logo_path).resize((24, 24), Image.BOX)
+        else:
+            golf_tournament_logo = Image.open(default_logo_path).resize((24, 24), Image.BOX)
+        
+        # Calculate the position to center the logo
+        logo_x = (64 - 24) // 2  # Center horizontally
+        
+        # Put the images on the canvas
+        self.canvas.SetImage(golf_tournament_logo.convert("RGB"), (logo_x - 1), 8)
+
+        # Load the canvas on screen.
+        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        # Refresh the Data image.
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+
+    def _draw_live_golf(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+
+        # Define fixed x-positions for the columns
+        short_name_x = 0
+        score_x = 40
+        hole_x = 52
+
+        # Loop through the top 5 golfers
+        for i, leader in enumerate(game['leader_scores']):
+            # Extract golfer details
+            short_name = leader['golfer']
+            score = leader['score']
+            hole_number = leader['hole']
+
+            # Calculate the y-position for each golfer (spacing by 6 pixels)
+            y_position = i * 6
+
+            # Draw the golfer's short name, score, and hole number
+            self.draw.text((short_name_x, y_position), short_name, font=self.font_micro, fill=(255, 255, 255))
+            self.draw.text((score_x, y_position), score, font=self.font_micro, fill=(255, 255, 255))
+            self.draw.text((hole_x, y_position), str(hole_number), font=self.font_micro, fill=(255, 255, 255))
+
+        # Update the canvas
+        self.canvas.SetImage(self.image, 0, 0)
+        self.canvas = self.matrix.SwapOnVSync(self.canvas)

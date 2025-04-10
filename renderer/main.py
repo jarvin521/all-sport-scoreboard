@@ -482,6 +482,12 @@ class MainRenderer:
             score = f"{int(leader['score']):+d}"
             hole_number = leader['hole']
 
+            # Process the short_name to trim the last name to 4 letters
+            if " " in short_name:
+                first_name, last_name = short_name.split(" ", 1)
+                last_name = last_name[:4]  # Trim the last name to 4 letters
+                short_name = f"{first_name} {last_name}"
+
             # Calculate the y-position for each golfer (spacing by 6 pixels)
             y_position = i * 6
 

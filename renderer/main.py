@@ -1,6 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
-from rgbmatrix import graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+#from rgbmatrix import graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 from utils import center_text
 from calendar import month_abbr
 from datetime import datetime, timedelta
@@ -26,8 +26,6 @@ class MainRenderer:
         self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
     
     def __all_games_final(self):
-        print(games)
-        len(games)
         for game in self.data.games:
             if game['state'] != 'post':
                 return False
@@ -125,15 +123,19 @@ class MainRenderer:
         #debug.info('ping render_game')
 
     def _draw_pregame(self, game):
+            # Clear the canvas by creating a blank image
+            self.image = Image.new('RGB', (self.width, self.height), (0, 0, 0))  # Black background
+            self.draw = ImageDraw.Draw(self.image)
+    
             time = datetime.now()
             gamedatetime = self.data.get_gametime()
             if gamedatetime.day == time.day:
                 date_text = 'TODAY'
             else:
-                date_text = gamedatetime.strftime('%-m/%-d') # Mac
-                #date_text = gamedatetime.strftime('%#m/%#d')  # Windows
-            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
-            #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+                #date_text = gamedatetime.strftime('%-m/%-d') # Mac
+                date_text = gamedatetime.strftime('%#m/%#d')  # Windows
+            #gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+            gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
             # Center the game time on screen.
             date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
@@ -434,8 +436,8 @@ class MainRenderer:
     def _draw_pre_golf(self, game):
         gametime = game['date']
         gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
-        date_text = gamedate.strftime('%-m/%-d') # Mac
-        #date_text = gamedate.strftime('%#m/%#d')  # Windows
+        #date_text = gamedate.strftime('%-m/%-d') # Mac
+        date_text = gamedate.strftime('%#m/%#d')  # Windows
 
         # Calculate the position to center the date text
         date_width = self.font_mini.getbbox(date_text)[2]
@@ -490,7 +492,10 @@ class MainRenderer:
         for i, leader in enumerate(game['leader_scores']):
             # Extract golfer details
             short_name = leader['golfer']
-            score = f"{int(leader['score']):+d}"
+            if leader['score'] == 'E':
+                score = "E"
+            else:
+                score = f"{int(leader['score']):+d}"
             hole_number = leader['hole']
 
             # Process the short_name to trim the last name to 4 letters

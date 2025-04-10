@@ -69,13 +69,14 @@ def get_golf(g, info, league, sport):
         'state': info['status']['type']['state'],
         'stateDetail': info['status']['type']['shortDetail']
     }
-    top_three = sorted(info['competitors'], key=lambda x: x['sortOrder'])[:3]
+    #top_three = sorted(info['competitors'], key=lambda x: x['position']['id'])[:3]
+    top_three = sorted([competitor for competitor in info['competitors'] if int(competitor['status']['position']['id']) > 0], key=lambda x: int(x['status']['position']['id']))[:3]
     leader_scores = []
     for i in top_three:
         leader_scores.append({
             'golfer': i['athlete']['shortName'],
-            'score': i['score']['displayValue'],
-            'hole': i.get('status', {}).get('hole', {}).get('number', None)
+            'score': i['status']['detail'].split('(')[0].strip(),
+            'hole': i['status']['thru']
         })
     
     # Add the leader_scores array to the game dictionary
@@ -125,7 +126,6 @@ def get_all_games():
                     if "golf" in URL:
                         if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                             game = get_golf(g, info, 'pga', 'golf')
-                            print(game)
                             games.append(game)
             return games
         except requests.exceptions.RequestException as e:

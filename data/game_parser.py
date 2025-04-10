@@ -69,18 +69,18 @@ def get_golf(g, info, league, sport):
         'state': info['status']['type']['state'],
         'stateDetail': info['status']['type']['shortDetail']
     }
-    top_five = sorted(info['competitors'], key=lambda x: x['sortOrder'])[:5]
-    top_five = [
+    top_three = sorted(info['competitors'], key=lambda x: x['sortOrder'])[:3]
+    top_three = [
                     {
                         "athlete": {
                             "id": "3980",
                             "uid": "s:1100~a:3980",
                             "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
                             "displayName": "Patton Kizzire",
-                            "shortName": "P. Kizzire"
+                            "shortName": "T. Woods"
                         },
                         "score": {
-                            "displayValue": "-7",
+                            "displayValue": "-9",
                             "value": -7,
                             "sortValue": -7
                         },
@@ -119,27 +119,6 @@ def get_golf(g, info, league, sport):
                             "uid": "s:1100~a:3980",
                             "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
                             "displayName": "Patton Kizzire",
-                            "shortName": "J. Speith"
-                        },
-                        "score": {
-                            "displayValue": "-9",
-                            "value": -7,
-                            "sortValue": -7
-                        },
-                        "status": {
-                            "hole": {
-                                "number": 7,
-                                "par": 4,
-                                "strokes": 4
-                            }
-                        }
-                    },
-                    {
-                        "athlete": {
-                            "id": "3980",
-                            "uid": "s:1100~a:3980",
-                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
-                            "displayName": "Patton Kizzire",
                             "shortName": "J. Schmoe"
                         },
                         "score": {
@@ -154,31 +133,10 @@ def get_golf(g, info, league, sport):
                                 "strokes": 4
                             }
                         }
-                    },
-                    {
-                        "athlete": {
-                            "id": "3980",
-                            "uid": "s:1100~a:3980",
-                            "guid": "90e2150b-9c14-32a0-3c9f-5a30100b585a",
-                            "displayName": "Karl Kizzire",
-                            "shortName": "K. Dandleton"
-                        },
-                        "score": {
-                            "displayValue": "-8",
-                            "value": -7,
-                            "sortValue": -7
-                        },
-                        "status": {
-                            "hole": {
-                                "number": 12,
-                                "par": 4,
-                                "strokes": 4
-                            }
-                        }
                     }
                 ]
     leader_scores = []
-    for i in top_five:
+    for i in top_three:
         leader_scores.append({
             'golfer': i['athlete']['shortName'],
             'score': i['score']['displayValue'],

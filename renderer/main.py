@@ -502,7 +502,7 @@ class MainRenderer:
         # Scroll through all golfers
         total_golfers = len(game['leader_scores'])
         golfers_per_screen = 3  # Number of golfers to display at a time
-        scroll_delay = 5.0  # Delay in seconds between scrolls
+        scroll_delay = 8.0  # Delay in seconds between scrolls
 
         for start_index in range(0, total_golfers, golfers_per_screen):
             # Clear the canvas for each scroll frame
@@ -546,5 +546,6 @@ class MainRenderer:
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
             # Add a delay to control scrolling speed
-            t.sleep(scroll_delay)
+            if start_index + golfers_per_screen < total_golfers:
+                t.sleep(scroll_delay)
     

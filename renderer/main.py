@@ -123,70 +123,74 @@ class MainRenderer:
         #debug.info('ping render_game')
 
     def _draw_pregame(self, game):
-            # Clear the canvas by creating a blank image
-            self.image = Image.new('RGB', (self.width, self.height), (0, 0, 0))  # Black background
-            self.draw = ImageDraw.Draw(self.image)
-    
-            time = datetime.now()
-            gamedatetime = self.data.get_gametime()
-            if gamedatetime.day == time.day:
-                date_text = 'TODAY'
-            else:
-                if os.name == 'nt':
-                    date_text = gamedatetime.strftime('%#m/%#d')  # Windows
-                else:
-                    date_text = gamedatetime.strftime('%-m/%-d') # Mac
+        # Clear the canvas by creating a blank image
+        self.image = Image.new('RGB', (self.width, self.height), (0, 0, 0))  # Black background
+        self.draw = ImageDraw.Draw(self.image)
+
+        time = datetime.now()
+        gamedatetime = self.data.get_gametime()
+        if gamedatetime.day == time.day:
+            date_text = 'TODAY'
+        else:
             if os.name == 'nt':
-                gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+                date_text = gamedatetime.strftime('%#m/%#d')  # Windows
             else:
-                gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+                date_text = gamedatetime.strftime('%-m/%-d') # Mac
+        if os.name == 'nt':
+            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+        else:
+            gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
-            # Center the game time on screen.
-            date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
-            gametime_pos = center_text(self.font_mini.getbbox(gametime)[2], 32) + 1
+        # Center the game time on screen.
+        date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
+        gametime_pos = center_text(self.font_mini.getbbox(gametime)[2], 32) + 1
 
-            # Draw the text on the Data image.
-            self.draw.text((date_pos, 0), date_text, font=self.font_mini)
-            self.draw.multiline_text((gametime_pos, 6), gametime, fill=(255, 255, 255), font=self.font_mini, align="center")
-            self.draw.text((26, 15), 'VS', font=self.font)
+        # Draw the text on the Data image.
+        self.draw.text((date_pos, 0), date_text, font=self.font_mini)
+        self.draw.multiline_text((gametime_pos, 6), gametime, fill=(255, 255, 255), font=self.font_mini, align="center")
+        self.draw.text((26, 15), 'VS', font=self.font)
 
-            # self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_micro, fill=(0, 255, 0))
-            # self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_micro, fill=(0, 255, 0))
+        # self.draw.text((1, 3), f"O/v {game['overUnder']}", font=self.font_micro, fill=(0, 255, 0))
+        # self.draw.text((46, 3), f"{game['hometeam']} {game['spread']}", font=self.font_micro, fill=(0, 255, 0))
 
-            # Put the data on the canvas
-            self.canvas.SetImage(self.image, 0, 0)
+        # Put the data on the canvas
+        self.canvas.SetImage(self.image, 0, 0)
 
-            # TEMP Open the logo image file
-            away_team_logo_path = 'logos/{}/{}.png'.format(game['league'], game['awayteam'])
-            home_team_logo_path = 'logos/{}/{}.png'.format(game['league'], game['hometeam'])
-            default_logo_path = 'logos/scoreboard/Missing.png'
+        # TEMP Open the logo image file
+        away_team_logo_path = 'logos/{}/{}.png'.format(game['league'], game['awayteam'])
+        home_team_logo_path = 'logos/{}/{}.png'.format(game['league'], game['hometeam'])
+        default_logo_path = 'logos/scoreboard/Missing.png'
 
-            if os.path.exists(away_team_logo_path):
-                away_team_logo = Image.open(away_team_logo_path).resize((16, 16), Image.BOX)
-            else:
-                away_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
+        if os.path.exists(away_team_logo_path):
+            away_team_logo = Image.open(away_team_logo_path).resize((16, 16), Image.BOX)
+        else:
+            away_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
 
-            if os.path.exists(home_team_logo_path):
-                home_team_logo = Image.open(home_team_logo_path).resize((16, 16), Image.BOX)
-            else:
-                home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
+        if os.path.exists(home_team_logo_path):
+            home_team_logo = Image.open(home_team_logo_path).resize((16, 16), Image.BOX)
+        else:
+            home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
 
-            # Put the images on the canvas
-            self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 14)
-            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
+        # Put the images on the canvas
+        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 14)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
 
-            # Add a basketball or football to the top right corner to differentiate between college games
-            if game['league'] == 'ncaa':
-                sport_logo = Image.open('logos/scoreboard/{}.png'.format(game['sport'])).resize((8, 8), Image.BOX)
-                self.canvas.SetImage(sport_logo.convert("RGB"), 55, 1)
+        # Add a basketball or football to the top right corner to differentiate between college games
+        if game['league'] == 'ncaa':
+            sport_logo = Image.open('logos/scoreboard/{}.png'.format(game['sport'])).resize((8, 8), Image.BOX)
+            self.canvas.SetImage(sport_logo.convert("RGB"), 55, 1)
 
-            # Load the canvas on screen.
-            self.canvas = self.matrix.SwapOnVSync(self.canvas)
-            # Refresh the Data image.
-            self.image = Image.new('RGB', (self.width, self.height))
-            self.draw = ImageDraw.Draw(self.image)
+        # Load the canvas on screen.
+        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        # Refresh the Data image.
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
 
     def _draw_live_baseball(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+
         homescore = game['homescore']
         awayscore = game['awayscore']
         print("home: ", homescore, "away: ", awayscore)
@@ -365,6 +369,9 @@ class MainRenderer:
         self.data.needs_refresh = True
 
     def _draw_postponed(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
 
         # # Set the position of the information on screen.
         self.draw.multiline_text((25, 2), "PPD", fill=(255, 255, 255), font=self.font_mini, align="center")
@@ -401,6 +408,10 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
 
     def _draw_post_game(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+
         self.draw.multiline_text((21, 0), "FINAL", fill=(255, 255, 255), font=self.font_mini,align="center")
         score = '{}-{}'.format(game['awayscore'], game['homescore'])
         # Set the position of the information on screen.
@@ -442,6 +453,10 @@ class MainRenderer:
 
 
     def _draw_pre_golf(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+        
         gametime = game['date']
         gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
         if os.name == 'nt':

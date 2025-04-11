@@ -1,5 +1,8 @@
-from rgbmatrix import RGBMatrixOptions, graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
+import os
+if os.name == 'nt':  # 'nt' means Windows
+    from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+else:  # Assume Linux
+    from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import collections
 import argparse
 import os

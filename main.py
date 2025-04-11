@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
 from data.scoreboard_config import ScoreboardConfig
 from renderer.main import MainRenderer
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
+import os
+if os.name == 'nt':  # 'nt' means Windows
+    from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+else:  # Assume Linux
+    from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from utils import args, led_matrix_options
 from data.data import Data
 import debug

@@ -1,12 +1,16 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
-from rgbmatrix import graphics
-#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+import os
+if os.name == 'nt':  # 'nt' means Windows
+    from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+else:  # Assume Linux
+    from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from utils import center_text
 from calendar import month_abbr
 from datetime import datetime, timedelta
 import time as t
 import debug
 import os
+import unicodedata
 
 GAMES_REFRESH_RATE = 900.0
 
@@ -94,13 +98,9 @@ class MainRenderer:
             if time < gametime and game['state'] == 'pre':
                 debug.info('Golf State')
                 self._draw_pre_golf(game)
-            elif game['state'] == 'post':
-                if game['stateDetail'] == 'Postponed':
-                    debug.info('Postponed')
-                    self._draw_postponed(game)
-                else:
-                    debug.info('Final State')
-                    #self._draw_post_golf(game)
+            elif game['stateDetail'] == 'Postponed':
+                debug.info('Postponed')
+                self._draw_postponed(game)
             else:
                 self._draw_live_golf(game)
         else:
@@ -132,10 +132,14 @@ class MainRenderer:
             if gamedatetime.day == time.day:
                 date_text = 'TODAY'
             else:
-                date_text = gamedatetime.strftime('%-m/%-d') # Mac
-                #date_text = gamedatetime.strftime('%#m/%#d')  # Windows
-            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
-            #gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+                if os.name == 'nt':
+                    date_text = gamedatetime.strftime('%#m/%#d')  # Windows
+                else:
+                    date_text = gamedatetime.strftime('%-m/%-d') # Mac
+            if os.name == 'nt':
+                gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+            else:
+                gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
 
             # Center the game time on screen.
             date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
@@ -299,6 +303,10 @@ class MainRenderer:
         self.data.needs_refresh = True
 
     def _draw_live_game(self, game):
+        # Clear the canvas
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
+
         homescore = game['homescore']
         awayscore = game['awayscore']
         print("home: ", homescore, "away: ", awayscore)
@@ -436,8 +444,11 @@ class MainRenderer:
     def _draw_pre_golf(self, game):
         gametime = game['date']
         gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
-        date_text = gamedate.strftime('%-m/%-d') # Mac
-        #date_text = gamedate.strftime('%#m/%#d')  # Windows
+        if os.name == 'nt':
+            date_text = gamedate.strftime('%-m/%-d') # Mac
+        else:
+            date_text = gamedate.strftime('%#m/%#d')  # Windows
+        
 
         # Calculate the position to center the date text
         date_width = self.font_mini.getbbox(date_text)[2]
@@ -486,32 +497,54 @@ class MainRenderer:
             tournament_name = game['name']
         tournament_width = self.font_mini.getbbox(tournament_name)[2]
         tournament_x = (self.width - tournament_width) // 2  # Center horizontally
-        self.draw.text((tournament_x, 0), tournament_name, font=self.font_mini, fill=(0, 255, 0))  # Green color
+        self.draw.text((tournament_x, 3), tournament_name, font=self.font_mini, fill=(0, 255, 0))  # Green color
 
-        # Loop through the top 5 golfers
-        for i, leader in enumerate(game['leader_scores']):
-            # Extract golfer details
-            short_name = leader['golfer']
-            if leader['score'] == 'E':
-                score = "E"
-            else:
-                score = f"{int(leader['score']):+d}"
-            hole_number = leader['hole']
+        # Scroll through all golfers
+        total_golfers = len(game['leader_scores'])
+        golfers_per_screen = 3  # Number of golfers to display at a time
+        scroll_delay = 5.0  # Delay in seconds between scrolls
 
-            # Process the short_name to trim the last name to 4 letters
-            if " " in short_name:
-                first_name, last_name = short_name.split(" ", 1)
-                last_name = last_name[:5]  # Trim the last name to 4 letters
-                short_name = f"{first_name} {last_name}"
+        for start_index in range(0, total_golfers, golfers_per_screen):
+            # Clear the canvas for each scroll frame
+            self.image = Image.new('RGB', (self.width, self.height))
+            self.draw = ImageDraw.Draw(self.image)
 
-            # Calculate the y-position for each golfer (spacing by 6 pixels)
-            y_position = 10 + i * 6
+            # Draw the tournament name again
+            self.draw.text((tournament_x, 0), tournament_name, font=self.font_mini, fill=(0, 255, 0))
 
-            # Draw the golfer's short name, score, and hole number
-            self.draw.text((short_name_x, y_position), short_name, font=self.font_mini, fill=(255, 255, 255))
-            self.draw.text((score_x, y_position), score, font=self.font_mini, fill=(255, 255, 255))
-            self.draw.text((hole_x, y_position), str(hole_number), font=self.font_mini, fill=(255, 255, 255))
+            # Display a subset of golfers
+            for i, leader in enumerate(game['leader_scores'][start_index:start_index + golfers_per_screen]):
+                # Extract golfer details
+                short_name = leader['golfer']
+                if leader['score'] == 'E':
+                    score = "E"
+                else:
+                    score = f"{int(leader['score']):+d}"
+                hole_number = leader['hole']
+                today_score = leader['today_score']
 
-        # Update the canvas
-        self.canvas.SetImage(self.image, 0, 0)
-        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+                # Process the short_name to trim the last name to 4 letters
+                if " " in short_name:
+                    first_name, last_name = short_name.split(" ", 1)
+                    last_name = last_name[:5]  # Trim the last name to 4 letters
+                    short_name = f"{first_name} {last_name}"
+                    short_name = unicodedata.normalize('NFKD', short_name).encode('ASCII', 'ignore').decode('ASCII')
+
+                # Calculate the y-position for each golfer (spacing by 6 pixels)
+                y_position = 10 + i * 6
+
+                # Draw the golfer's short name, score, and hole number
+                self.draw.text((short_name_x, y_position), short_name, font=self.font_mini, fill=(255, 255, 255))
+                self.draw.text((score_x, y_position), score, font=self.font_mini, fill=(255, 255, 255))
+                if game['state'] == 'post':
+                    self.draw.text((hole_x, y_position), str(today_score), font=self.font_mini, fill=(255, 255, 255))
+                else:
+                    self.draw.text((hole_x, y_position), str(hole_number), font=self.font_mini, fill=(255, 255, 255))
+
+            # Update the canvas
+            self.canvas.SetImage(self.image, 0, 0)
+            self.canvas = self.matrix.SwapOnVSync(self.canvas)
+
+            # Add a delay to control scrolling speed
+            t.sleep(scroll_delay)
+    

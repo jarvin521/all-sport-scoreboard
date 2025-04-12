@@ -577,7 +577,7 @@ class MainRenderer:
             self.draw = ImageDraw.Draw(self.image)
 
             # Draw the tournament name again
-            self.draw.text((tournament_x, 0), tournament_name, font=self.font_mini, fill=(0, 255, 0))
+            self.draw.text((tournament_x, 0), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))
 
             # Display a subset of golfers
             for i, leader in enumerate(game['leader_scores'][start_index:start_index + golfers_per_screen]):

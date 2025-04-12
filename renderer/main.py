@@ -26,8 +26,9 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
         # Load the fonts
         self.font = ImageFont.truetype("fonts/score_large.otf", 16)
-        self.font_mini = ImageFont.truetype("fonts/LcdSolid-VPzB.ttf", 8)
+        self.font_mini = ImageFont.truetype("fonts/04B_03B_.TTF", 8)
         self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
+        self.font_golf_header = ImageFont.truetype("fonts/LcdSolid-VPzB.ttf", 8)
     
     def __all_games_final(self):
         for game in self.data.games:
@@ -563,7 +564,7 @@ class MainRenderer:
             tournament_name = game['name']
         tournament_width = self.font_mini.getbbox(tournament_name)[2]
         tournament_x = (self.width - tournament_width) // 2  # Center horizontally
-        self.draw.text((tournament_x, 3), tournament_name, font=self.font_mini, fill=(0, 255, 0))  # Green color
+        self.draw.text((tournament_x, 3), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))  # Green color
 
         # Scroll through all golfers
         total_golfers = len(game['leader_scores'])

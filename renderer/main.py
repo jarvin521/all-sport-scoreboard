@@ -20,7 +20,7 @@ class MainRenderer:
         self.data = data
         self.canvas = matrix.CreateFrameCanvas()
         self.width = 64
-        self.height = 64
+        self.height = 32
         # Create a new data image.
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
@@ -562,7 +562,8 @@ class MainRenderer:
             tournament_name = "The Masters"
         else:
             tournament_name = game['name']
-        tournament_width = self.font_mini.getbbox(tournament_name)[2]
+        # tournament_width = self.font_mini.getbbox(tournament_name)[2]
+        tournament_width = self.draw.textlength(tournament_name, font=self.font_golf_header)
         tournament_x = (self.width - tournament_width) // 2  # Center horizontally
         self.draw.text((tournament_x, 3), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))  # Green color
 

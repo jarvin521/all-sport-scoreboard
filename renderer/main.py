@@ -565,7 +565,7 @@ class MainRenderer:
         # tournament_width = self.font_mini.getbbox(tournament_name)[2]
         tournament_width = self.draw.textlength(tournament_name, font=self.font_golf_header)
         tournament_x = (self.width - tournament_width) // 2  # Center horizontally
-        self.draw.text((tournament_x, 3), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))  # Green color
+        self.draw.text((tournament_x, 2), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))  # Green color
 
         # Scroll through all golfers
         total_golfers = len(game['leader_scores'])
@@ -578,7 +578,7 @@ class MainRenderer:
             self.draw = ImageDraw.Draw(self.image)
 
             # Draw the tournament name again
-            self.draw.text((tournament_x, 0), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))
+            self.draw.text((tournament_x, 2), tournament_name, font=self.font_golf_header, fill=(0, 255, 0))
 
             # Display a subset of golfers
             for i, leader in enumerate(game['leader_scores'][start_index:start_index + golfers_per_screen]):

@@ -26,7 +26,7 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
         # Load the fonts
         self.font = ImageFont.truetype("fonts/score_large.otf", 16)
-        self.font_mini = ImageFont.truetype("fonts/LcdSolid-VPzB.ttf", 7)
+        self.font_mini = ImageFont.truetype("fonts/LcdSolid-VPzB.ttf", 8)
         self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
     
     def __all_games_final(self):

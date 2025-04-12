@@ -137,9 +137,10 @@ class MainRenderer:
             else:
                 date_text = gamedatetime.strftime('%-m/%-d') # Mac
         if os.name == 'nt':
-            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
-        else:
             gametime = gamedatetime.strftime("%#I:%M %#p")  # Windows
+        else:
+            gametime = gamedatetime.strftime("%-I:%M %p") # Mac
+            
 
         # Center the game time on screen.
         date_pos = center_text(self.font_mini.getbbox(date_text)[2], 32) + 1
@@ -170,10 +171,15 @@ class MainRenderer:
             home_team_logo = Image.open(home_team_logo_path).resize((16, 16), Image.BOX)
         else:
             home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
+        
+        # Calculate x-positions for the logos
+        logo_width = 16
+        away_logo_x = (self.width // 3 - logo_width) // 2
+        home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
         # Put the images on the canvas
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 14)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 14)
+        self.canvas.SetImage(away_team_logo.convert("RGB"), away_logo_x, 14)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 14)
 
         # Add a basketball or football to the top right corner to differentiate between college games
         if game['league'] == 'ncaa':
@@ -289,8 +295,15 @@ class MainRenderer:
         self.canvas.SetImage(balls.convert("RGB"), 20, 15)
         self.canvas.SetImage(strikes.convert("RGB"), 30, 15)
         self.canvas.SetImage(outs.convert("RGB"), 37, 15)
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 1)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 1)
+        
+        # Calculate x-positions for the logos
+        logo_width = 16
+        away_logo_x = (self.width // 3 - logo_width) // 2
+        home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
+
+        # Put the images on the canvas
+        self.canvas.SetImage(away_team_logo.convert("RGB"), away_logo_x, 1)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 1)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
@@ -314,26 +327,37 @@ class MainRenderer:
         homescore = game['homescore']
         awayscore = game['awayscore']
         print("home: ", homescore, "away: ", awayscore)
-        # Refresh the data
-        quarter = str(game['quarter']) # I'm using quarter but it works as half or period or inining
-        quarter_position = center_text(self.font.getbbox(quarter)[2], 32)
-        if self.data.needs_refresh:
-            debug.info('Refresh game overview')
-            self.data.refresh_games()
-            self.data.needs_refresh = False
+
+        # Center the quarter text
+        quarter = str(game['quarter'])  # Quarter, half, period, or inning
+        quarter_width = self.font.getbbox(quarter)[2]
+        quarter_x = (self.width - quarter_width) // 2  # Center horizontally
+
+        # Center the time_period text
         if game['league'] != 'mlb':
             time_period = game['time']
-            time_period_pos = center_text(self.font_mini.getbbox(time_period)[2], 32)
-            self.draw.multiline_text((time_period_pos, 14), time_period, fill=(255, 255, 255), font=self.font_mini, align="center")
+            time_period_width = self.font_mini.getbbox(time_period)[2]
+            time_period_x = (self.width - time_period_width) // 2  # Center horizontally
+            self.draw.multiline_text((time_period_x, 14), time_period, fill=(255, 255, 255), font=self.font_mini, align="center")
 
-        # Set the position of the information on screen.
-        homescore = '{0:d}'.format(homescore)
+        # Center the away score in the first third
         awayscore = '{0:d}'.format(awayscore)
-        home_score_size = self.font.getbbox(homescore)[2]
+        awayscore_width = self.font.getbbox(awayscore)[2]
+        away_score_x = (self.width // 3 - awayscore_width) // 2
 
-        self.draw.multiline_text((quarter_position, 0), quarter, fill=(255, 255, 255), font=self.font, align="center")
-        self.draw.multiline_text((6, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
-        self.draw.multiline_text((59 - home_score_size, 19), homescore, fill=(255, 255, 255), font=self.font, align="center")
+        # Center the home score in the last third
+        homescore = '{0:d}'.format(homescore)
+        homescore_width = self.font.getbbox(homescore)[2]
+        home_score_x = 2 * (self.width // 3) + (self.width // 3 - homescore_width) // 2
+
+        # Draw the quarter text
+        self.draw.multiline_text((quarter_x, 0), quarter, fill=(255, 255, 255), font=self.font, align="center")
+
+        # Draw the away score
+        self.draw.multiline_text((away_score_x, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
+
+        # Draw the home score
+        self.draw.multiline_text((home_score_x, 19), homescore, fill=(255, 255, 255), font=self.font, align="center")
 
         # Put the data on the canvas
         self.canvas.SetImage(self.image, 0, 0)
@@ -353,19 +377,27 @@ class MainRenderer:
         else:
             home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
 
-        # Put the images on the canvas
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 1)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 1)
+        # Calculate x-positions for the logos
+        logo_width = 16
+        away_logo_x = (self.width // 3 - logo_width) // 2
+        home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
-        # Load the canvas on screen.
+        # Put the images on the canvas
+        self.canvas.SetImage(away_team_logo.convert("RGB"), away_logo_x, 1)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 1)
+
+        # Load the canvas on screen
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
-        # Refresh the Data image.
+
+        # Refresh the Data image
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
+
         # Check if the game is over
         if game['state'] == 'post':
             debug.info('GAME OVER')
-        # Save the scores.
+
+        # Save the scores
         self.data.needs_refresh = True
 
     def _draw_postponed(self, game):
@@ -373,8 +405,12 @@ class MainRenderer:
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
 
-        # # Set the position of the information on screen.
-        self.draw.multiline_text((25, 2), "PPD", fill=(255, 255, 255), font=self.font_mini, align="center")
+        # Calculate the position to center the "PPD" text
+        final_text_width = self.font_mini.getbbox("PPD")[2]
+        final_text_x = (self.width - final_text_width) // 2  # Center horizontally
+
+        # Draw the "FINAL" text
+        self.draw.multiline_text((final_text_x, 0), "PPD", fill=(255, 255, 255), font=self.font_mini, align="center")
 
         # Put the data on the canvas
         self.canvas.SetImage(self.image, 0, 0)
@@ -395,10 +431,16 @@ class MainRenderer:
         else:
             home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
 
+        # Calculate x-positions for the logos
+        logo_width = 16
+        away_logo_x = (self.width // 3 - logo_width) // 2
+        home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
+        rain_x = (self.width - logo_width) // 2  # Center horizontally
+
         # Put the images on the canvas
-        self.canvas.SetImage(rain.convert("RGB"), 24, 12)
-        self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 7)
-        self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 7)
+        self.canvas.SetImage(rain.convert("RGB"), rain_x, 12)
+        self.canvas.SetImage(away_team_logo.convert("RGB"), away_logo_x, 7)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 7)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
@@ -412,12 +454,20 @@ class MainRenderer:
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
 
-        self.draw.multiline_text((21, 0), "FINAL", fill=(255, 255, 255), font=self.font_mini,align="center")
+        # Calculate the position to center the "FINAL" text
+        final_text_width = self.font_mini.getbbox("FINAL")[2]
+        final_text_x = (self.width - final_text_width) // 2  # Center horizontally
+
+        # Draw the "FINAL" text
+        self.draw.multiline_text((final_text_x, 0), "FINAL", fill=(255, 255, 255), font=self.font_mini, align="center")
+
+        # Calculate the position to center the score text
         score = '{}-{}'.format(game['awayscore'], game['homescore'])
-        # Set the position of the information on screen.
-        score_position = center_text(self.font.getbbox(score)[2], 32)
-        # Draw the text on the Data image.
-        self.draw.multiline_text((score_position, 19), score, fill=(255, 255, 255), font=self.font, align="center")
+        score_width = self.font.getbbox(score)[2]
+        score_x = (self.width - score_width) // 2  # Center horizontally
+
+        # Draw the score text
+        self.draw.multiline_text((score_x, 19), score, fill=(255, 255, 255), font=self.font, align="center")
 
         # Put the data on the canvas
         self.canvas.SetImage(self.image, 0, 0)
@@ -437,13 +487,14 @@ class MainRenderer:
         else:
             home_team_logo = Image.open(default_logo_path).resize((16, 16), Image.BOX)
 
+        # Calculate x-positions for the logos
+        logo_width = 16
+        away_logo_x = (self.width // 3 - logo_width) // 2
+        home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
+
         # Put the images on the canvas
-        if game['league'] == 'nba':
-            self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 2)
-            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 2)
-        else:
-            self.canvas.SetImage(away_team_logo.convert("RGB"), 3, 4)
-            self.canvas.SetImage(home_team_logo.convert("RGB"), 45, 4)
+        self.canvas.SetImage(away_team_logo.convert("RGB"), away_logo_x, 3)
+        self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 3)
 
         # Load the canvas on screen.
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
@@ -456,7 +507,7 @@ class MainRenderer:
         # Clear the canvas
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
-        
+
         gametime = game['date']
         gamedate = datetime.strptime(gametime, "%Y-%m-%dT%H:%MZ")
         if os.name == 'nt':

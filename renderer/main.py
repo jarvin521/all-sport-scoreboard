@@ -26,7 +26,7 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
         # Load the fonts
         self.font = ImageFont.truetype("fonts/score_large.otf", 16)
-        self.font_mini = ImageFont.truetype("fonts/04B_03B_.TTF", 8)
+        self.font_mini = ImageFont.truetype("fonts/LcdSolid-VPzB.ttf", 7)
         self.font_micro = ImageFont.truetype("fonts/04B_03B_.TTF", 6)
     
     def __all_games_final(self):
@@ -552,9 +552,9 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
 
         # Define fixed x-positions for the columns
-        short_name_x = 0
-        score_x = 40
-        hole_x = 52
+        short_name_x = 1
+        score_x = 41
+        hole_x = 53
 
         # Draw the tournament name centered at the top in green
         if game['name'] == 'Masters Tournament':

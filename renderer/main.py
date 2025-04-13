@@ -555,7 +555,7 @@ class MainRenderer:
         # Define fixed x-positions for the columns
         short_name_x = 1
         score_x = 40
-        hole_x = 53
+        hole_x = 54
 
         # Draw the tournament name centered at the top in green
         if game['name'] == 'Masters Tournament':

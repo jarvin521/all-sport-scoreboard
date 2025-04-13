@@ -78,7 +78,7 @@ def get_golf(g, info, league, sport):
 
         leader_scores.append({
             'golfer': i['athlete']['shortName'],
-            'score': i['score']['displayValue'],
+            'score': i['statistics'][0]['displayValue'],
             'hole': i['status']['thru'],
             'today_score': int(i ['linescores'][latest_round - 1]['value'])
         })

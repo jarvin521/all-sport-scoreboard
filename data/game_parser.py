@@ -74,7 +74,10 @@ def get_golf(g, info, league, sport):
     leader_scores = []
     for i in top_nine:
         # Get the latest finished round number
-        latest_round = int(info['status']['period'])  # Assuming 'round' is available and represents the latest finished round
+        if info['status']['period'] == 5:
+            latest_round = 4
+        else:
+            latest_round = int(info['status']['period'])  # Assuming 'round' is available and represents the latest finished round
 
         leader_scores.append({
             'golfer': i['athlete']['shortName'],

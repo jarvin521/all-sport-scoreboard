@@ -131,7 +131,7 @@ def get_all_games():
                             game = create_game(g, info, 'nhl', 'football')
                             games.append(game)
                     if "golf" in URL:
-                        if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
+                        if "RBC" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                             game = get_golf(g, info, 'pga', 'golf')
                             games.append(game)
             return games

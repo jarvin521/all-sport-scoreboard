@@ -1,6 +1,6 @@
 # all-sport-scoreboard
 
-Display your favorite team's scores on an raspberry pi powered LED matrix. Currently the code has NFL, MLB, NBA, NHL, NCAA Football and Basketball. Currently supports 64x32 boards only.
+Display your favorite team's scores on an raspberry pi powered LED matrix. Currently the code has NFL, MLB, NBA, NHL, Golf, and NCAA Football, Basketball and Baseball. Currently supports 64x32 boards only.
 
 ### Credit and inpsiration
 I got an ad on social media for a small LED scoreboard and thought it was pretty neat but was turned off by their high price tag. Then I started Googling DIY versions and low and behold there were a lot of them! I forked [nfl-led-scoreboard](https://github.com/mikemountain/nfl-led-scoreboard) and took its code base and started making updates. Looks like he was inspired by the [nhl-led-scoreboard](https://github.com/riffnshred/nhl-led-scoreboard), who based THEIR project off of the [mlb-led-scoreboard](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard). So go check them out too if you want a specific sport, but this one supports many.
@@ -18,8 +18,8 @@ Currently shows the team logos and the game time. ![pregame](imgs/pre_game.jpg)
 ### Live scoring updates
 The score updates every 3 seconds.
 - MLB games include the team's logos, the count with red, green, and blue dots, and the bases indicate runners on. ![mlb-image](imgs/MLB_mid_game.jpg)
-- NBA, NCAA Basketball, NHL games display the team's logos, scores, time and period. ![basketball-image](imgs/NBA_mid_game.jpg)
-- NFL and NCAA Football should do what MikeMountain's scoreboard does, but being that we're not in season I haven't been able to validate it yet.  Coming this fall!
+- Football, Basketball, and Hockey games display the team's logos, scores, time and period. ![basketball-image](imgs/NBA_mid_game.jpg)
+- Golf displays the name of the tournament at the top and scrolls through the top 9 leaders 3 golfers per page. ![golf-image](imgs/Golf.jpg)
 
 ### Postgame
 Just kind of looks like the pre-game screen but with the final scores. ![final score](imgs/post_game.jpg)
@@ -27,12 +27,6 @@ Just kind of looks like the pre-game screen but with the final scores. ![final s
 ### Postponed
 Mostly for MLB, but I added a PPD display with a rain cloud for when games are postponed. ![postponed](imgs/postponed.jpg)
 
-## Roadmap
-
-Future plans include:
-* Updating the config.json to include Fav Teams from all sports.
-* better logic in some places especially around the MLB count and bases.
-- I'm not a programmer, I know some basic coding practices to get this thing cobbled together so feel free to put PRs out there to optimize the code.
 
 ## Installation
 ### Hardware Assembly
@@ -97,14 +91,7 @@ I've added a new list of for NCAAF Conferences.  You can add the conferences you
 
 Still by no means anywhere near perfect, but its been running smoothly for a few months now!
 
-Now, in a terminal, cd to the all-sport-scoreboard folder and run this command.
-```
-sudo python main.py
-```
-**If you run your screen on an Adafruit HAT or Bonnet, you need to supply this flag.**
-```
-sudo python main.py --led-gpio-mapping=adafruit-hat-pwm --led-brightness=20 --led-slowdown-gpio=4
-```
+I've made a lot of updates over the year or so I've been messing with this.  Things are pretty solid and the code is getting cleaner and cleaner.  Let me know if you are working on other things or have requests I'm always looking for ways to improve this!
 
 ### Flags
 Use the same flags used in the [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix/) library to configure your screen.

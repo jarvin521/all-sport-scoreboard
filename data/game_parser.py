@@ -109,8 +109,8 @@ def get_all_games():
                                 if team in g['name']:
                                     game = create_game(g, info, 'ncaa', 'football')
                                     games.append(game)
-                    if " " in URL:
-                        if "Minnesota Timberwolves" in g['name']:
+                    if "nba" in URL:
+                        if " " in g['name']:
                             game = create_game(g, info, 'nba', 'basketball')
                             games.append(game)
                     if "mens-college-basketball" in URL:

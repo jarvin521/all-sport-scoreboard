@@ -560,6 +560,8 @@ class MainRenderer:
         # Draw the tournament name centered at the top in green
         if game['name'] == 'Masters Tournament':
             tournament_name = "The Masters"
+        elif game['name'] == 'PGA Championship':
+            tournament_name = "PGA Champ"
         else:
             tournament_name = game['name']
         # tournament_width = self.font_mini.getbbox(tournament_name)[2]

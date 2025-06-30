@@ -110,7 +110,7 @@ def get_all_games():
                                     game = create_game(g, info, 'ncaa', 'football')
                                     games.append(game)
                     if "nba" in URL:
-                        if " " in g['name']:
+                        if "~" in g['name']:
                             game = create_game(g, info, 'nba', 'basketball')
                             games.append(game)
                     if "mens-college-basketball" in URL:
@@ -119,7 +119,7 @@ def get_all_games():
                             game = create_game(g, info, 'ncaa', 'basketball')
                             games.append(game)
                     if "mlb" in URL:
-                        if "Cincinnati Reds" in g['name'] or "Minnesota Twins" in g['name']:
+                        if " " in g['name'] or "Minnesota Twins" in g['name']:
                             game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "college-baseball" in URL:
@@ -127,7 +127,7 @@ def get_all_games():
                             game = create_game(g, info, 'ncaa', 'baseball', get_baseball_extra_fields(info))
                             games.append(game)
                     if "nhl" in URL:
-                        if " " in g['name'] or "USA" in g['name']:
+                        if "~" in g['name'] or "USA" in g['name']:
                             game = create_game(g, info, 'nhl', 'football')
                             games.append(game)
                     if "golf" in URL:

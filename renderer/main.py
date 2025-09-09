@@ -183,7 +183,7 @@ class MainRenderer:
         self.canvas.SetImage(home_team_logo.convert("RGB"), home_logo_x, 14)
 
         # Add a basketball or football to the top right corner to differentiate between college games
-        if game['league'] == 'ncaa':
+        if game['league'] == 'ncaa' or game['league'] == 'prep':
             sport_logo = Image.open('logos/scoreboard/{}.png'.format(game['sport'])).resize((8, 8), Image.BOX)
             self.canvas.SetImage(sport_logo.convert("RGB"), 55, 1)
 

@@ -27,7 +27,7 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
 #         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7" #Big Ten
 #        ]
 
-conferences = [] #["Favorites", "SEC"]
+conferences = ["Favorites", "SEC"]
 with open("ncaaf_conferences.json", "r") as json_file:
     ncaaf_json = json.load(json_file)
 
@@ -240,7 +240,7 @@ def get_all_games():
                                 game = create_game(g, info, 'ncaa', 'basketball')
                                 games.append(game)
                         if "mlb" in URL:
-                            if " " in g['name'] or "Minnesota Twins" in g['name']:
+                            if "Cincinnati Reds" in g['name'] or "Minnesota Twins" in g['name']:
                                 game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                                 games.append(game)
                         if "college-baseball" in URL:

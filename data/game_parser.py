@@ -57,7 +57,7 @@ def create_game(g, info, league, sport, extra_fields=None):
 
 def create_prep_game(g, league, sport, extra_fields=None):
     game = {
-        'name': f"Jordan vs. {g['opponent']}",
+        'name': f"{g['url_team']} vs. {g['opponent']}",
         'date': g['date'],
         'league': league,
         'sport': sport,
@@ -269,6 +269,7 @@ def get_all_games():
                             if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                                 game = get_golf(g, info, 'pga', 'golf')
                                 games.append(game)
+                                
             return games
         except requests.exceptions.RequestException as e:
             if i < 4:

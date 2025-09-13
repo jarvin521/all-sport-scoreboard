@@ -16,7 +16,8 @@ URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
         'http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard',
-        "https://www.maxpreps.com/mn/jordan/jordan-hubmen-jaguars-panthers/football/schedule/"
+        "https://www.maxpreps.com/mn/jordan/jordan-hubmen-jaguars-panthers/football/schedule/",
+        "https://www.maxpreps.com/mn/east-grand-forks/east-grand-forks-green-wave/football/schedule/"
         ]
 
 # URLs = ["http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
@@ -60,11 +61,11 @@ def create_prep_game(g, league, sport, extra_fields=None):
         'date': g['date'],
         'league': league,
         'sport': sport,
-        'hometeam': "Jordan" if g['home'] else g['opponent'],
-        'homeid': "Jordan" if g['home'] else g['opponent'],
+        'hometeam': g['url_team'] if g['home'] else g['opponent'],
+        'homeid': g['url_team'] if g['home'] else g['opponent'],
         'homescore': int(g.get('home_score', 0)) if str(g.get('home_score', '')).isdigit() else 0,
-        'awayteam': "Jordan" if not g['home'] else g['opponent'],
-        'awayid': "Jordan" if not g['home'] else g['opponent'],
+        'awayteam': g['url_team'] if not g['home'] else g['opponent'],
+        'awayid': g['url_team'] if not g['home'] else g['opponent'],
         'awayscore': int(g.get('away_score', 0)) if str(g.get('away_score', '')).isdigit() else 0,
         'state': "post" if g['time'] == "final" else "pre",
         'stateDetail': "final" if g['time'] == "final" else "pre"
@@ -139,6 +140,12 @@ def get_maxpreps_schedule_json(url):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch page: {response.status_code}")
     
+    # Extract the home team from the URL
+    match = re.search(r'/mn/([^/]+)/', url)
+    if not match:
+        raise Exception(f"Could not parse home team from URL: {url}")
+    url_team = match.group(1).replace('-', ' ').title()  # Convert to title case (e.g., "jordan" -> "Jordan")
+
     soup = BeautifulSoup(response.text, 'html.parser')
     tables = soup.find_all('table')
     if not tables:
@@ -151,49 +158,56 @@ def get_maxpreps_schedule_json(url):
     for table in tables:
         for tr in table.find_all('tr'):
             cells = [td.get_text(strip=True) for td in tr.find_all('td')]
-            if len(cells) >= 3:
-                # Extract date and time
-                date_str = cells[0]  # MM/DD format
-                time_str = cells[2] if len(cells) > 3 else "7:00PM"
-                try:
-                    # Combine date and time, then parse into a naive datetime object
-                    naive_datetime = datetime.strptime(f"{date_str}/{current_year} {time_str}", "%m/%d/%Y %I:%M%p")
-                    # Localize the naive datetime to Central Time
-                    datetime_obj = naive_datetime.astimezone(utc)
-                except ValueError:
-                    continue  # Skip invalid dates or times
+            if not cells or len(cells) < 3:
+                continue  # Skip empty or malformed rows
 
-                raw_opponent = cells[1]
-                result = cells[2]
+            date_str = cells[0]
+            raw_opponent = cells[1]
+            third_cell = cells[2]
 
-                # Determine home/away
-                if raw_opponent.startswith('@'):
-                    home = False
-                elif raw_opponent.startswith('vs'):
-                    home = True
-                else:
-                    home = None
+            # Handle LIVE games
+            if date_str.upper() == "LIVE":
+                date_str = datetime.now().strftime("%m/%d")  # Use today's date
+                time_str = "7:00PM"
+                result = None
+            # Handle past games with scores
+            elif re.match(r'^[WL]\d+-\d+', third_cell):
+                result = third_cell
+                time_str = "7:00PM"  # Default time for past games
+            # Handle future games with time
+            else:
+                result = None
+                time_str = third_cell if re.match(r'\d{1,2}:\d{2}[ap]m', third_cell.lower()) else "7:00PM"
 
-                opponent = clean_opponent_name(raw_opponent)
+            try:
+                naive_datetime = datetime.strptime(f"{date_str}/{current_year} {time_str}", "%m/%d/%Y %I:%M%p")
+                datetime_obj = central.localize(naive_datetime).astimezone(utc)
+            except ValueError:
+                continue
 
-                game = {
-                    "date": datetime_obj,
-                    "opponent": opponent,
-                    "home": home
-                }
+            opponent = clean_opponent_name(raw_opponent)
+            home = raw_opponent.startswith('vs')
 
+            game = {
+                "date": datetime_obj,
+                "url_team": url_team,
+                "opponent": opponent,
+                "home": home
+            }
+
+            if result:
                 parsed = parse_result(result)
                 if parsed:
                     game["time"] = parsed[0]
                     game["home_score"] = parsed[1] if home else parsed[2]
                     game["away_score"] = parsed[2] if home else parsed[1]
-                else:
-                    game["time"] = result  # e.g., "Report Score"
+            else:
+                game["time"] = time_str
 
-                games.append(game)
+            games.append(game)
 
     # Find the game closest to the current date
-    current_date = datetime.now(central)
+    current_date = datetime.now(utc)
     closest_game = min(
         games,
         key=lambda game: abs(game['date'] - current_date)

@@ -271,7 +271,7 @@ def get_all_games():
                             if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                                 game = get_golf(g, info, 'pga', 'golf')
                                 games.append(game)
-            print(games)                    
+            #print(games)                    
             return games
         except requests.exceptions.RequestException as e:
             if i < 4:

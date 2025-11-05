@@ -9,15 +9,15 @@ import re
 
 URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100", #NCAA Tournament
-        "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200", #D1-FCS
-        "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200", #D1-FBS
+        "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200", #D1-FBS
+        #"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200", #D1-FCS
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
         'http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard',
-        "https://www.maxpreps.com/mn/jordan/jordan-hubmen-jaguars-panthers/football/schedule/",
-        "https://www.maxpreps.com/mn/east-grand-forks/east-grand-forks-green-wave/football/schedule/"
+        # "https://www.maxpreps.com/mn/jordan/jordan-hubmen-jaguars-panthers/football/schedule/",
+        # "https://www.maxpreps.com/mn/east-grand-forks/east-grand-forks-green-wave/football/schedule/"
         ]
 
 # URLs = ["http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
@@ -232,7 +232,9 @@ def get_all_games():
                 else:
                     response = requests.get(URL)
                     res = response.json()
+                    list(res.keys())
                     for g in res['events']:
+                        list(g.keys())
                         info = g['competitions'][0]
                         if "nfl" in URL:
                             if " " in g['name']: #or " " in g['name']:
@@ -245,31 +247,31 @@ def get_all_games():
                                         game = create_game(g, info, 'ncaa', 'football')
                                         games.append(game)
                         if "nba" in URL:
-                            if "~" in g['name']:
+                            if "Minnesota" in g['name']:
                                 game = create_game(g, info, 'nba', 'basketball')
                                 games.append(game)
                         if "mens-college-basketball" in URL:
-                            if "~" in g['name']: 
+                            if "Kentucky Wildcats" in g['name']: 
                             #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
                                 game = create_game(g, info, 'ncaa', 'basketball')
                                 games.append(game)
                         if "mlb" in URL:
-                            if "Cincinnati Reds" in g['name'] or "Minnesota Twins" in g['name']:
+                            if "~" in g['name']:
                                 game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                                 games.append(game)
                         if "college-baseball" in URL:
-                            if "Kentucky Wildcats" in g['name']:
+                            if "~" in g['name']:
                                 game = create_game(g, info, 'ncaa', 'baseball', get_baseball_extra_fields(info))
                                 games.append(game)
                         if "nhl" in URL:
-                            if "~" in g['name'] or "USA" in g['name']:
+                            if "Minnesota Wild" in g['name'] or "USA" in g['name']:
                                 game = create_game(g, info, 'nhl', 'football')
                                 games.append(game)
                         if "golf" in URL:
                             if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                                 game = get_golf(g, info, 'pga', 'golf')
                                 games.append(game)
-                                
+            print(games)                    
             return games
         except requests.exceptions.RequestException as e:
             if i < 4:

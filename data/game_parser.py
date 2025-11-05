@@ -251,8 +251,8 @@ def get_all_games():
                                 game = create_game(g, info, 'nba', 'basketball')
                                 games.append(game)
                         if "mens-college-basketball" in URL:
-                            if "Kentucky Wildcats" in g['name']: 
-                            #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
+                            #if "Kentucky Wildcats" in g['name']: 
+                            if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
                                 game = create_game(g, info, 'ncaa', 'basketball')
                                 games.append(game)
                         if "mlb" in URL:

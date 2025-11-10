@@ -175,7 +175,7 @@ class MainRenderer:
         
         # Calculate x-positions for the logos
         logo_width = 16
-        away_logo_x = (self.width // 3 - logo_width) // 2
+        away_logo_x = (self.width // 3 - logo_width) // 2 + 2
         home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
         # Put the images on the canvas
@@ -299,7 +299,7 @@ class MainRenderer:
         
         # Calculate x-positions for the logos
         logo_width = 16
-        away_logo_x = (self.width // 3 - logo_width) // 2
+        away_logo_x = (self.width // 3 - logo_width) // 2 + 2
         home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
         # Put the images on the canvas
@@ -380,7 +380,7 @@ class MainRenderer:
 
         # Calculate x-positions for the logos
         logo_width = 16
-        away_logo_x = (self.width // 3 - logo_width) // 2
+        away_logo_x = (self.width // 3 - logo_width) // 2 + 2
         home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
         # Put the images on the canvas
@@ -434,7 +434,7 @@ class MainRenderer:
 
         # Calculate x-positions for the logos
         logo_width = 16
-        away_logo_x = (self.width // 3 - logo_width) // 2
+        away_logo_x = (self.width // 3 - logo_width) // 2 + 2
         home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
         rain_x = (self.width - logo_width) // 2  # Center horizontally
 
@@ -490,7 +490,7 @@ class MainRenderer:
 
         # Calculate x-positions for the logos
         logo_width = 16
-        away_logo_x = (self.width // 3 - logo_width) // 2
+        away_logo_x = (self.width // 3 - logo_width) // 2 + 2
         home_logo_x = 2 * (self.width // 3) + (self.width // 3 - logo_width) // 2
 
         # Put the images on the canvas

@@ -7,20 +7,21 @@ from bs4 import BeautifulSoup
 import re
 #from utils import convert_time
 
-URLs = ["http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=23", #SEC
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=2", #ACC
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=8", #Big 12
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=4", #Big East
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7", #Big Ten
+URLs = [#"http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=23", #SEC
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=2", #ACC
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=8", #Big 12
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=4", #Big East
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7", #Big Ten
+        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
         #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100", #NCAA Tournament
         #"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200", #D1-FBS
         #"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200", #D1-FCS
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
-        "http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
+        #"http://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard",
         "http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
-        'http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard',
+        #'http://site.api.espn.com/apis/site/v2/sports/golf/leaderboard',
         # "https://www.maxpreps.com/mn/jordan/jordan-hubmen-jaguars-panthers/football/schedule/",
         # "https://www.maxpreps.com/mn/east-grand-forks/east-grand-forks-green-wave/football/schedule/"
         ]
@@ -116,7 +117,7 @@ def get_golf(g, info, league, sport):
             'hole': i['status']['thru'],
             'today_score': int(i ['linescores'][latest_round - 1]['value'])
         })
-    
+
     # Add the leader_scores array to the game dictionary
     game['leader_scores'] = leader_scores
     return game
@@ -129,9 +130,9 @@ def clean_opponent_name(raw_name):
     return name
 
 def parse_result(result_text):
-    
+
     match = re.match(r'(W|L)(\d+)-(\d+)', result_text)
-    
+
     if not match:
         return None
     outcome, score1, score2 = match.groups()
@@ -145,7 +146,7 @@ def get_maxpreps_schedule_json(url):
     response = requests.get(url)
     if response.status_code != 200:
         raise Exception(f"Failed to fetch page: {response.status_code}")
-    
+
     # Extract the home team from the URL
     match = re.search(r'/mn/([^/]+)/', url)
     if not match:
@@ -257,7 +258,7 @@ def get_all_games():
                                 game = create_game(g, info, 'nba', 'basketball')
                                 games.append(game)
                         if "mens-college-basketball" in URL:
-                            if " " in g['name']: 
+                            if " " in g['name']:
                             #if any(conference in info.get('groups', {}).get('shortName', '') for conference in ["SEC", "Big East", "Big 12", "Big Ten", "ACC"]):
                                 game = create_game(g, info, 'ncaa', 'basketball')
                                 games.append(game)
@@ -277,7 +278,7 @@ def get_all_games():
                             if "Masters" in g['name'] or "US Open" in g['name'] or "PGA Championship" in g['name'] or "Open Championship" in g['name']:
                                 game = get_golf(g, info, 'pga', 'golf')
                                 games.append(game)
-            #print(games)                    
+            #print(games)
             return games
         except requests.exceptions.RequestException as e:
             if i < 4:

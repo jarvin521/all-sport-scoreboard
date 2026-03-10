@@ -5,7 +5,10 @@ from pytz import timezone
 import time as t
 from bs4 import BeautifulSoup
 import re
-#from utils import convert_time
+import debug
+
+# note: this script is often run under cron; use the project's debug module
+# for errors so they are routed to the journal instead of clogging stdout
 
 URLs = [#"http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=23", #SEC
@@ -285,8 +288,8 @@ def get_all_games():
                 t.sleep(1)
                 continue
             else:
-                print("Can't hit ESPN api after multiple retries, dying ", e)
+                debug.error("Can't hit ESPN api after multiple retries: %s" % e)
         except Exception as e:
-            print("something bad?", e)
+            debug.error("unexpected error in game_parser: %s" % e)
             # sleep 60 seconds
             t.sleep(60)

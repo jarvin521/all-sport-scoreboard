@@ -16,8 +16,8 @@ URLs = [#"http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
         #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=8", #Big 12
         #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=4", #Big East
         #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=7", #Big Ten
-        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
-        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100", #NCAA Tournament
+        #"http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=50", #All D-1
+        "http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100", #NCAA Tournament
         #"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200", #D1-FBS
         #"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=200", #D1-FCS
         "http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
@@ -266,7 +266,7 @@ def get_all_games():
                                 game = create_game(g, info, 'ncaa', 'basketball')
                                 games.append(game)
                         if "mlb" in URL:
-                            if "~" in g['name']:
+                            if "Cincinnati" in g['name'] or "Minnesota" in g['name']:
                                 game = create_game(g, info, 'mlb', 'baseball', get_baseball_extra_fields(info))
                                 games.append(game)
                         if "college-baseball" in URL:
